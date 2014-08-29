@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+if [[ -z "$TOP" ]]; then
+    echo "Error: TOP env var not set."
+    exit 1
+fi
+
+if [[ -z "$CROSS_COMPILE" ]]; then
+    echo "Error: CROSS_COMPILE env var not set."
+    exit 1
+fi
+
+make -j4 ARCH=arm CROSS_COMPILE=$CROSS_COMPILE O=$TOP/out/linux M=$TOP/nouveau/drm -C $TOP/linux modules
