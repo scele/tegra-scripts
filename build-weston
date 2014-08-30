@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+if [[ -z "$TOP" ]]; then
+    echo "Error: TOP env var not set."
+    exit 1
+fi
+
+if [[ -z "$CROSS_COMPILE" ]]; then
+    echo "Error: CROSS_COMPILE env var not set."
+    exit 1
+fi
+
+cd $TOP/weston
+mkdir -p m4
+./autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$TOP/out/root/home/ubuntu/usr
+make -j4
+sudo make install
