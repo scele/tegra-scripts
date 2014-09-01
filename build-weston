@@ -4,6 +4,6 @@
 
 cd $TOP/weston
 mkdir -p m4
-./autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$TOP/out/root/home/ubuntu/usr
+./autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX
 make -j4
 make install

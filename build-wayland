@@ -3,6 +3,6 @@
 . scripts/env.sh
 
 cd $TOP/wayland
-./autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$TOP/out/root/home/ubuntu/usr --disable-documentation
+./autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --disable-documentation
 make -j4
 make install
