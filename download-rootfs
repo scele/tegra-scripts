@@ -6,6 +6,7 @@ if [[ -z "$TOP" ]]; then
 fi
 
 f=Tegra_Linux_Sample-Root-Filesystem_R19.3.0_armhf.tbz2
+mkdir -p $TOP/out
 outfile=$TOP/out/$f
 root=$TOP/out/root
 echo "Downloading rootfs..."
