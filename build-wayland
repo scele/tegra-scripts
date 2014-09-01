@@ -2,7 +2,8 @@
 
 . scripts/env.sh
 
-cd $TOP/wayland
-./autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --disable-documentation
+mkdir -p $TOP/out/wayland
+cd $TOP/out/wayland
+$TOP/wayland/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --disable-documentation
 make -j4
 make install

@@ -2,7 +2,8 @@
 
 . scripts/env.sh
 
-cd $TOP/drm
-./autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --enable-tegra-experimental-api
+mkdir -p $TOP/out/drm
+cd $TOP/out/drm
+$TOP/drm/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --enable-tegra-experimental-api
 make -j4
 make install
