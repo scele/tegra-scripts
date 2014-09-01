@@ -5,4 +5,4 @@
 cd $TOP/drm
 ./autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$TOP/out/root/home/ubuntu/usr --enable-tegra-experimental-api
 make -j4
-sudo make install
+make install
