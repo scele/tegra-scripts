@@ -6,5 +6,4 @@ mkdir -p $TOP/out/weston
 cd $TOP/out/weston
 mkdir -p m4
 $TOP/weston/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX
-make -j4
-make install
+make -j4 && make install

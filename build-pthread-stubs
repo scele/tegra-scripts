@@ -5,5 +5,4 @@
 mkdir -p $TOP/out/pthread-stubs
 cd $TOP/out/pthread-stubs
 $TOP/pthread-stubs/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX
-make -j4
-make install
+make -j4 && make install

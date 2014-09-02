@@ -5,5 +5,4 @@
 mkdir -p $TOP/out/drm
 cd $TOP/out/drm
 $TOP/drm/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --enable-tegra-experimental-api
-make -j4
-make install
+make -j4 && make install
