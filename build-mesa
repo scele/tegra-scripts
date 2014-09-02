@@ -1,16 +1,8 @@
 #!/usr/bin/env bash
 
-if [[ -z "$TOP" ]]; then
-    echo "Error: TOP env var not set."
-    exit 1
-fi
+. scripts/env.sh
 
-if [[ -z "$CROSS_COMPILE" ]]; then
-    echo "Error: CROSS_COMPILE env var not set."
-    exit 1
-fi
-
-cd $TOP/mesa
-./autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$TOP/out/root/home/ubuntu/usr --without-dri-drivers --with-gallium-drivers=nouveau --enable-gallium-egl --enable-gbm --enable-egl --with-egl-platforms=drm,wayland --enable-gles1 --enable-gles2 --enable-opengl
-make -j4
-sudo make install
+mkdir -p $TOP/out/mesa
+cd $TOP/out/mesa
+$TOP/mesa/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --without-dri-drivers --with-gallium-drivers=nouveau --enable-gallium-egl --enable-gbm --enable-egl --with-egl-platforms=drm,wayland --enable-gles1 --enable-gles2 --enable-opengl
+make -j4 && make install
