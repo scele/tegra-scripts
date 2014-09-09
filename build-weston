@@ -5,5 +5,6 @@
 mkdir -p $TOP/out/build/weston
 cd $TOP/out/build/weston
 mkdir -p m4
-$TOP/weston/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX
-make -j4 && make install
+$TOP/weston/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT --disable-x11-compositor --disable-rpi-compositor --enable-demo-clients-install
+# TODO fix ownership of weston-launch!
+make -j$NPROC && fakeroot make DESTDIR=$SYSROOT install
