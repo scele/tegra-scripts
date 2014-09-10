@@ -8,10 +8,11 @@ f=$LINARO_GCC_PACKAGE.tar.xz
 mkdir -p $TOP/out
 outfile=$TOP/out/$f
 url="https://releases.linaro.org/${LINARO_GCC_RELEASE}/components/toolchain/binaries/$f"
-echo "Downloading $url..."
+status "Downloading $url..."
 curl $url -o $outfile
 
-echo "Extracting gcc..."
+status "Extracting..."
 mkdir -p $TOP
 tar xJf $outfile -C $TOP
 rm $outfile
+status "Cross-compilation toolchain successfully downloaded"

@@ -8,6 +8,21 @@ status()
     echo -e "\e[1m"$*"\e[0m "
 }
 
+cd_package()
+{
+    if [[ -z "$PACKAGE" ]]; then
+        echo "Error: PACKAGE var not set."
+        exit 1
+    fi
+    mkdir -p $TOP/out/build/$PACKAGE
+    cd $TOP/out/build/$PACKAGE
+}
+
+package_success()
+{
+    status "Installation of $PACKAGE successful!"
+}
+
 LINARO_GCC_VERSION=4.8
 LINARO_GCC_RELEASE=14.04
 LINARO_GCC_PACKAGE=gcc-linaro-arm-linux-gnueabihf-${LINARO_GCC_VERSION}-20${LINARO_GCC_RELEASE}_linux

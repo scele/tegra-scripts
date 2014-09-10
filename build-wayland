@@ -2,11 +2,17 @@
 
 set -e
 
+PACKAGE=wayland
+
 . scripts/env.sh
 
-mkdir -p $TOP/out/build/wayland
-cd $TOP/out/build/wayland
-$TOP/wayland/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT --disable-documentation --disable-scanner
-make -j$NPROC && make DESTDIR=$SYSROOT install
+cd_package
 
-status "Installation successful!"
+$TOP/wayland/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT \
+--disable-documentation \
+--disable-scanner
+
+make -j$NPROC
+make DESTDIR=$SYSROOT install
+
+package_success

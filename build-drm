@@ -2,11 +2,20 @@
 
 set -e
 
+PACKAGE=drm
+
 . scripts/env.sh
 
-mkdir -p $TOP/out/build/drm
-cd $TOP/out/build/drm
-$TOP/drm/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT --enable-tegra-experimental-api --disable-cairo-tests --disable-intel --disable-radeon --disable-vmwgfx
-make -j$NPROC && make DESTDIR=$SYSROOT install
+cd_package
 
-status "Installation successful!"
+$TOP/drm/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT \
+--enable-tegra-experimental-api \
+--disable-cairo-tests \
+--disable-intel \
+--disable-radeon \
+--disable-vmwgfx
+
+make -j$NPROC
+make DESTDIR=$SYSROOT install
+
+package_success
