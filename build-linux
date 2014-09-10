@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 
-if [[ -z "$TOP" ]]; then
-    echo "Error: TOP env var not set."
-    exit 1
-fi
+set -e
 
-if [[ -z "$CROSS_COMPILE" ]]; then
-    echo "Error: CROSS_COMPILE env var not set."
-    exit 1
-fi
+PACKAGE=linux
 
-make -j4 -C $TOP/linux ARCH=arm O=$TOP/out/linux CROSS_COMPILE=$CROSS_COMPILE tegra_defconfig dtbs zImage modules
+. scripts/env.sh
+
+cd_package
+
+make -j$NPROC -C $TOP/linux ARCH=arm O=$PWD CROSS_COMPILE=$CROSS_COMPILE tegra_defconfig dtbs zImage modules
+sudo cp $TOP/out/build/linux/arch/arm/boot/zImage $SYSROOT/boot
+sudo cp $TOP/out/build/linux/arch/arm/boot/dts/tegra124-* $SYSROOT/boot
+sudo make -C $TOP/linux ARCH=arm O=$PWD CROSS_COMPILE=$CROSS_COMPILE INSTALL_MOD_PATH=$SYSROOT modules_install
+
+package_success
