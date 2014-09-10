@@ -3,6 +3,11 @@ if [[ -z "$TOP" ]]; then
     exit 1
 fi
 
+status()
+{
+    echo -e "\e[1m"$*"\e[0m "
+}
+
 LINARO_GCC_VERSION=4.8
 LINARO_GCC_RELEASE=14.04
 LINARO_GCC_PACKAGE=gcc-linaro-arm-linux-gnueabihf-${LINARO_GCC_VERSION}-20${LINARO_GCC_RELEASE}_linux
