@@ -4,5 +4,5 @@
 
 mkdir -p $TOP/out/build/mesa
 cd $TOP/out/build/mesa
-$TOP/mesa/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT --without-dri-drivers --with-gallium-drivers=nouveau --enable-gallium-egl --enable-gbm --enable-egl --with-egl-platforms=drm,wayland --enable-gles1 --enable-gles2 --enable-opengl --disable-xlib-glx
+$TOP/mesa/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT --without-dri-drivers --with-gallium-drivers=nouveau --enable-gallium-egl --enable-gbm --enable-egl --with-egl-platforms=drm,wayland --enable-gles1 --enable-gles2 --enable-opengl
 make -j$NPROC && make DESTDIR=$SYSROOT install
