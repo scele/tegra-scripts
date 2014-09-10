@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-. scripts/env.sh
-
 set -e
+
+. scripts/env.sh
 
 run_in_qemu()
 {

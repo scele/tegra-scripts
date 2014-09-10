@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 . scripts/env.sh
 
 f=Tegra_Linux_Sample-Root-Filesystem_R19.3.0_armhf.tbz2

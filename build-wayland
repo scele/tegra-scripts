@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 . scripts/env.sh
 
 mkdir -p $TOP/out/build/wayland
