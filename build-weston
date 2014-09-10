@@ -12,3 +12,5 @@ make -j$NPROC && fakeroot make DESTDIR=$SYSROOT install
 # Fix permissions of weston-launch which was installed using fakeroot
 sudo chown root $SYSROOT/$PREFIX/bin/weston-launch
 sudo chmod u+s $SYSROOT/$PREFIX/bin/weston-launch
+
+status "Installation successful!"

@@ -8,3 +8,5 @@ mkdir -p $TOP/out/build/wayland
 cd $TOP/out/build/wayland
 $TOP/wayland/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT --disable-documentation --disable-scanner
 make -j$NPROC && make DESTDIR=$SYSROOT install
+
+status "Installation successful!"

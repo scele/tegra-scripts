@@ -8,3 +8,5 @@ mkdir -p $TOP/out/build/drm
 cd $TOP/out/build/drm
 $TOP/drm/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT --enable-tegra-experimental-api --disable-cairo-tests --disable-intel --disable-radeon --disable-vmwgfx
 make -j$NPROC && make DESTDIR=$SYSROOT install
+
+status "Installation successful!"

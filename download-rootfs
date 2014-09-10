@@ -53,3 +53,4 @@ sudo tar xpf $outfile
 cd $root
 status "Installing binary drivers..."
 sudo ./apply_binaries.sh --root $TOP/out/root
+status "L4T rootfs successfully downloaded into $SYSROOT!"
