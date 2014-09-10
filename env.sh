@@ -17,7 +17,8 @@ CROSS_COMPILE=arm-linux-gnueabihf-
 
 NPROC=`nproc`
 PREFIX=/home/ubuntu/usr
-SYSROOT="$TOP/out/root"
+
+export SYSROOT="$TOP/out/root"
 
 export PKG_CONFIG_SYSROOT_DIR=$SYSROOT
 export PKG_CONFIG_LIBDIR="$SYSROOT/usr/lib/arm-linux-gnueabihf/pkgconfig:$SYSROOT/usr/lib/pkgconfig:$SYSROOT/$PREFIX/lib/pkgconfig:$SYSROOT/usr/share/pkgconfig"
