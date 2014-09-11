@@ -1,8 +1,21 @@
 #!/usr/bin/env bash
 
+set -e
+
+PACKAGE=drm
+
 . scripts/env.sh
 
-mkdir -p $TOP/out/drm
-cd $TOP/out/drm
-$TOP/drm/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --enable-tegra-experimental-api
-make -j4 && make install
+cd_package
+
+run_autogen --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT \
+--enable-tegra-experimental-api \
+--disable-cairo-tests \
+--disable-intel \
+--disable-radeon \
+--disable-vmwgfx
+
+make -j$NPROC
+make DESTDIR=$SYSROOT install
+
+package_success

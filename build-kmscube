@@ -2,7 +2,7 @@
 
 set -e
 
-PACKAGE=pthread-stubs
+PACKAGE=kmscube
 
 . scripts/env.sh
 
@@ -11,6 +11,6 @@ cd_package
 run_autogen --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT
 
 make -j$NPROC
-make install
+make DESTDIR=$SYSROOT install
 
 package_success

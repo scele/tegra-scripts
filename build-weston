@@ -1,9 +1,25 @@
 #!/usr/bin/env bash
 
+set -e
+
+PACKAGE=weston
+
 . scripts/env.sh
 
-mkdir -p $TOP/out/weston
-cd $TOP/out/weston
+cd_package
+
 mkdir -p m4
-$TOP/weston/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX
-make -j4 && make install
+run_autogen --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT \
+--disable-x11-compositor \
+--disable-rpi-compositor \
+--enable-demo-clients-install
+
+make -j$NPROC
+# Use fakeroot since a weston-launch is attempted to be root suid
+fakeroot make DESTDIR=$SYSROOT install
+
+# Fix permissions of weston-launch which was installed using fakeroot
+sudo chown root $SYSROOT/$PREFIX/bin/weston-launch
+sudo chmod u+s $SYSROOT/$PREFIX/bin/weston-launch
+
+package_success
