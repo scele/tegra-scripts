@@ -6,7 +6,7 @@ set -e
 
 run_in_qemu()
 {
-    sudo chroot $SYSROOT /usr/bin/qemu-arm-static /usr/bin/env -i PATH="/sbin:/usr/sbin:/bin:/usr/bin" TERM="$TERM" $*
+    sudo chroot $SYSROOT /usr/bin/qemu-arm-static -E PATH="/sbin:/usr/sbin:/bin:/usr/bin",TERM="$TERM" $*
 }
 
 status "Installing qemu-arm-static binary into target FS..."
