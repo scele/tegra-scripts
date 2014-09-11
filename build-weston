@@ -9,7 +9,7 @@ PACKAGE=weston
 cd_package
 
 mkdir -p m4
-$TOP/weston/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT \
+run_autogen --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT \
 --disable-x11-compositor \
 --disable-rpi-compositor \
 --enable-demo-clients-install

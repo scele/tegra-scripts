@@ -8,7 +8,7 @@ PACKAGE=wayland
 
 cd_package
 
-$TOP/wayland/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT \
+run_autogen --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT \
 --disable-documentation \
 --disable-scanner
 

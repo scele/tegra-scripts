@@ -8,7 +8,7 @@ PACKAGE=mesa
 
 cd_package
 
-$TOP/mesa/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT \
+run_autogen --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT \
 --without-dri-drivers \
 --with-gallium-drivers=nouveau \
 --enable-gallium-egl \

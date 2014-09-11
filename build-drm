@@ -8,7 +8,7 @@ PACKAGE=drm
 
 cd_package
 
-$TOP/drm/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT \
+run_autogen --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT \
 --enable-tegra-experimental-api \
 --disable-cairo-tests \
 --disable-intel \

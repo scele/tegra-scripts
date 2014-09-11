@@ -18,6 +18,17 @@ cd_package()
     cd $TOP/out/build/$PACKAGE
 }
 
+run_autogen()
+{
+    if [[ -z "$PACKAGE" ]]; then
+        echo "Error: PACKAGE var not set."
+        exit 1
+    fi
+    if [ ! -f "$TOP/out/build/$PACKAGE/Makefile" ]; then
+        $TOP/$PACKAGE/autogen.sh $*
+    fi
+}
+
 package_success()
 {
     status "Installation of $PACKAGE successful!"

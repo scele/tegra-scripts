@@ -8,7 +8,7 @@ PACKAGE=kmscube
 
 cd_package
 
-$TOP/kmscube/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT
+run_autogen --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT
 
 make -j$NPROC
 make DESTDIR=$SYSROOT install
