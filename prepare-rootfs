@@ -9,15 +9,19 @@ run_in_qemu()
     sudo chroot $SYSROOT /usr/bin/qemu-arm-static -E PATH="/sbin:/usr/sbin:/bin:/usr/bin",TERM="$TERM" $*
 }
 
-status "Installing qemu-arm-static binary into target FS..."
-QEMUDEB=$(mktemp)
-curl http://ftp.debian.org/debian/pool/main/q/qemu/qemu-user-static_2.1+dfsg-4_i386.deb >$QEMUDEB
-ar p $QEMUDEB data.tar.xz|sudo tar xJf - -C $SYSROOT ./usr/bin/qemu-arm-static
-rm -f $QEMUDEB
+if [ ! -f "$SYSROOT/usr/bin/qemu-arm-static" ]; then
+    status "Installing qemu-arm-static binary into target FS..."
+    QEMUDEB=$(mktemp)
+    curl http://ftp.debian.org/debian/pool/main/q/qemu/qemu-user-static_2.1+dfsg-4_i386.deb >$QEMUDEB
+    ar p $QEMUDEB data.tar.xz|sudo tar xJf - -C $SYSROOT ./usr/bin/qemu-arm-static
+    rm -f $QEMUDEB
+fi
 
-status "Fixing target's resolv.conf..."
-sudo mv $SYSROOT/etc/resolv.conf $SYSROOT/etc/resolv.conf.backup
-sudo cp /etc/resolv.conf $SYSROOT/etc/resolv.conf
+if [ ! -f "$SYSROOT/etc/resolv.conf.backup" ]; then
+    status "Fixing target's resolv.conf..."
+    sudo mv $SYSROOT/etc/resolv.conf $SYSROOT/etc/resolv.conf.backup
+    sudo cp /etc/resolv.conf $SYSROOT/etc/resolv.conf
+fi
 
 status "Using qemu to install required packages on target FS..."
 run_in_qemu /usr/bin/apt-get update
