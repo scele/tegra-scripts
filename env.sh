@@ -27,8 +27,10 @@ LINARO_GCC_VERSION=4.8
 LINARO_GCC_RELEASE=14.04
 LINARO_GCC_PACKAGE=gcc-linaro-arm-linux-gnueabihf-${LINARO_GCC_VERSION}-20${LINARO_GCC_RELEASE}_linux
 
-PATH="$TOP/$LINARO_GCC_PACKAGE/bin:$PATH"
-CROSS_COMPILE=arm-linux-gnueabihf-
+if [[ -z "$CROSS_COMPILE" ]]; then
+    PATH="$TOP/$LINARO_GCC_PACKAGE/bin:$PATH"
+    CROSS_COMPILE=arm-linux-gnueabihf-
+fi
 
 NPROC=`nproc`
 PREFIX=/home/ubuntu/usr
