@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -e
+
+PACKAGE=kmscube
+
+. scripts/env.sh
+
+cd_package
+
+$TOP/kmscube/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT
+
+make -j$NPROC
+make DESTDIR=$SYSROOT install
+
+package_success
