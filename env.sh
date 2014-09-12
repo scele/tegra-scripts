@@ -1,17 +1,23 @@
-if [[ -z "$TOP" ]]; then
-    echo "Error: TOP env var not set."
-    exit 1
-fi
-
 status()
 {
     echo -e "\e[1m"$*"\e[0m "
 }
 
+error()
+{
+    echo -e "\e[91m"$*"\e[0m "
+    exit 1
+}
+
+if [[ -z "$TOP" ]]; then
+    error "Error: TOP env var not set."
+    exit 1
+fi
+
 cd_package()
 {
     if [[ -z "$PACKAGE" ]]; then
-        echo "Error: PACKAGE var not set."
+        error "Error: PACKAGE var not set."
         exit 1
     fi
     mkdir -p $TOP/out/build/$PACKAGE
@@ -21,7 +27,7 @@ cd_package()
 run_autogen()
 {
     if [[ -z "$PACKAGE" ]]; then
-        echo "Error: PACKAGE var not set."
+        error "Error: PACKAGE var not set."
         exit 1
     fi
     if [ ! -f "$TOP/out/build/$PACKAGE/Makefile" ]; then
