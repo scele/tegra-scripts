@@ -7,7 +7,7 @@ set -e
 f=Tegra_Linux_Sample-Root-Filesystem_R19.3.0_armhf.tbz2
 mkdir -p $TOP/out
 outfile=$TOP/out/$f
-root=$TOP/out/root
+root=$SYSROOT
 
 if [ ! -f "$outfile" ]; then
     status "Downloading rootfs..."
@@ -38,5 +38,5 @@ fi
 
 cd $root
 status "Installing binary drivers..."
-sudo ./apply_binaries.sh --root $TOP/out/root
+sudo ./apply_binaries.sh --root $SYSROOT
 status "L4T rootfs successfully downloaded into $SYSROOT!"
