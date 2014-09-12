@@ -4,10 +4,40 @@ set -e
 
 . scripts/env.sh
 
+sudo_write()
+{
+    echo $1 |sudo tee $2 >/dev/null
+}
+
+# Run a command into the chrooted target FS using qemu, by adding a binfmt_misc
 run_in_qemu()
 {
-    sudo chroot $SYSROOT /usr/bin/qemu-arm-static -E PATH="/sbin:/usr/sbin:/bin:/usr/bin",TERM="$TERM" $*
+    # Do we have binfmt_misc support?
+    if [ ! -f /proc/sys/fs/binfmt_misc/status ]; then
+        error "This script requires binfmt_misc support to run ARM binaries under qemu"
+    fi
+    # Save current active status and enable
+    local curstatus=0
+    if [ $(cat /proc/sys/fs/binfmt_misc/status) = "enabled" ]; then
+        curstatus=1
+    fi
+    sudo_write 1 /proc/sys/fs/binfmt_misc/status
+    # Add new rule to run ARM binaries using our installed qemu
+    if [ ! -f /proc/sys/fs/binfmt_misc/arm-qemu-build-rootfs-tmp ]; then
+        sudo_write ':arm-qemu-build-rootfs-tmp:M::\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-arm-static:' /proc/sys/fs/binfmt_misc/register
+    fi
+    # Run the command
+    sudo chroot $SYSROOT /usr/bin/env -i PATH="/sbin:/usr/sbin:/bin:/usr/bin" TERM="$TERM" $*
+    # Remove rule, restore status
+    sudo_write -1 /proc/sys/fs/binfmt_misc/arm-qemu-build-rootfs-tmp
+    sudo_write $curstatus /proc/sys/fs/binfmt_misc/status
 }
+
+if [ ! -f "$SYSROOT/etc/resolv.conf.rootfs-backup" ]; then
+    status "Fixing target's resolv.conf..."
+    sudo mv $SYSROOT/etc/resolv.conf $SYSROOT/etc/resolv.conf.rootfs-backup
+    sudo cp /etc/resolv.conf $SYSROOT/etc/resolv.conf
+fi
 
 if [ ! -f "$SYSROOT/usr/bin/qemu-arm-static" ]; then
     status "Installing qemu-arm-static binary into target FS..."
@@ -15,12 +45,6 @@ if [ ! -f "$SYSROOT/usr/bin/qemu-arm-static" ]; then
     curl http://ftp.debian.org/debian/pool/main/q/qemu/qemu-user-static_2.1+dfsg-4_i386.deb >$QEMUDEB
     ar p $QEMUDEB data.tar.xz|sudo tar xJf - -C $SYSROOT ./usr/bin/qemu-arm-static
     rm -f $QEMUDEB
-fi
-
-if [ ! -f "$SYSROOT/etc/resolv.conf.backup" ]; then
-    status "Fixing target's resolv.conf..."
-    sudo mv $SYSROOT/etc/resolv.conf $SYSROOT/etc/resolv.conf.backup
-    sudo cp /etc/resolv.conf $SYSROOT/etc/resolv.conf
 fi
 
 status "Using qemu to install required packages on target FS..."
