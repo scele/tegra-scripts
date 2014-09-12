@@ -39,5 +39,5 @@ run_in_qemu /usr/bin/symlinks -cr /lib /usr/lib
 
 status "Restoring target's resolv.conf..."
 sudo rm -f $SYSROOT/etc/resolv.conf
-sudo mv $SYSROOT/etc/resolv.conf.backup $SYSROOT/etc/resolv.conf
+sudo mv $SYSROOT/etc/resolv.conf.rootfs-backup $SYSROOT/etc/resolv.conf
 status "Target FS ready to compile the open graphics stack!"
