@@ -65,3 +65,4 @@ status "Restoring target's resolv.conf..."
 sudo rm -f $SYSROOT/etc/resolv.conf
 sudo mv $SYSROOT/etc/resolv.conf.rootfs-backup $SYSROOT/etc/resolv.conf
 status "Target FS ready to compile the open graphics stack!"
+status "You might have to run 'apt-get -f install' to fix packages dependencies on the next boot"
