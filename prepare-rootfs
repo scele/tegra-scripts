@@ -14,7 +14,11 @@ run_in_qemu()
 {
     # Do we have binfmt_misc support?
     if [ ! -f /proc/sys/fs/binfmt_misc/status ]; then
-        error "This script requires binfmt_misc support to run ARM binaries under qemu"
+        # Nope, try to mount it maybe?
+        sudo mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc
+        if [ ! -f /proc/sys/fs/binfmt_misc/status ]; then
+            error "This script requires binfmt_misc support to run ARM binaries under qemu"
+        fi
     fi
     # Save current active status and enable
     local curstatus=0
