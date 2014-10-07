@@ -17,7 +17,8 @@ run_autogen --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT
 --with-egl-platforms=drm,wayland \
 --enable-gles1 \
 --enable-gles2 \
---enable-opengl
+--enable-opengl \
+--enable-osmesa
 
 make -j$NPROC
 make DESTDIR=$SYSROOT install
