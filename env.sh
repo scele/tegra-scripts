@@ -50,15 +50,23 @@ if [[ -z "$CROSS_COMPILE" ]]; then
 fi
 
 NPROC=`nproc`
+
+# TODO change this!
 PREFIX=/home/ubuntu/usr
 
 export SYSROOT="$TOP/out/target/L4T"
 
 export PKG_CONFIG_SYSROOT_DIR=$SYSROOT
-export PKG_CONFIG_LIBDIR="$SYSROOT/usr/lib/arm-linux-gnueabihf/pkgconfig:$SYSROOT/usr/lib/pkgconfig:$SYSROOT/$PREFIX/lib/pkgconfig:$SYSROOT/usr/share/pkgconfig"
+export PKG_CONFIG_LIBDIR="$SYSROOT/usr/lib/pkgconfig:$SYSROOT/usr/share/pkgconfig"
 export PKG_CONFIG_PATH="$SYSROOT/$PREFIX/lib/pkgconfig"
 # Use system pkg-config as the toolchain's one is too old (0.25) to handle PKG_CONFIG_SYSROOT_DIR correctly.
 export PKG_CONFIG=pkg-config
 
-export CFLAGS="--sysroot=$SYSROOT -I$SYSROOT/usr/include/arm-linux-gnueabihf -I$SYSROOT/usr/include -L$SYSROOT/lib/arm-linux-gnueabihf -L$SYSROOT/usr/lib/arm-linux-gnueabihf"
+export CFLAGS="--sysroot=$SYSROOT"
+
+# distro-specific flags
+export CFLAGS="$CFLAGS -I$SYSROOT/usr/include/arm-linux-gnueabihf -I$SYSROOT/usr/include -L$SYSROOT/lib/arm-linux-gnueabihf -L$SYSROOT/usr/lib/arm-linux-gnueabihf"
+export PKG_CONFIG_LIBDIR="$SYSROOT/usr/lib/arm-linux-gnueabihf/pkgconfig:$PKG_CONFIG_LIBDIR"
+
+####
 export CXXFLAGS="$CFLAGS"
