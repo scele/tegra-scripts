@@ -1,0 +1,4 @@
+NEWCFLAGS="-I$SYSROOT/usr/include/arm-linux-gnueabihf -L$SYSROOT/lib/arm-linux-gnueabihf -L$SYSROOT/usr/lib/arm-linux-gnueabihf"
+export CFLAGS="$CFLAGS $NEWCFLAGS"
+export CXXFLAGS="$CXXFLAGS $NEWCFLAGS"
+export PKG_CONFIG_LIBDIR="$SYSROOT/usr/lib/arm-linux-gnueabihf/pkgconfig:$PKG_CONFIG_LIBDIR"

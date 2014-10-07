@@ -1,0 +1,33 @@
+ARCH_PACKAGES="
+glproto
+dri2proto
+dri3proto
+presentproto
+libxext
+libxcb
+libxdamage
+libxfixes
+libxshmfence
+libxcursor
+libxkbcommon-x11
+libjpeg-turbo
+cairo
+mtdev
+"
+
+status "Using qemu to install required packages on target FS..."
+sudo mount -t proc proc $SYSROOT/proc
+run_in_qemu pacman -Sy --needed --noconfirm $ARCH_PACKAGES
+sudo umount $SYSROOT/proc
+
+echo "Fixing symlinks in target FS' /usr/lib..."
+LINKS=$(find $SYSROOT/usr/lib -type l)
+for LINK in $LINKS; do
+    L=$(readlink $LINK)
+    if [[ "$L" = /* ]]; then
+        R=$(dirname $LINK)
+        RL=$(realpath --relative-to ${R#"$SYSROOT"} $L)
+        echo Linking $LINK to $RL
+        sudo ln -sf $RL $LINK
+    fi
+done

@@ -8,9 +8,9 @@ PACKAGE=pthread-stubs
 
 cd_package
 
-run_autogen --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT
+run_autogen
 
-make -j$NPROC
-make install
+run_make
+run_make install
 
 package_success

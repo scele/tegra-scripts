@@ -9,13 +9,13 @@ PACKAGE=linux
 cd_package
 
 make -j$NPROC -C $TOP/linux ARCH=arm O=$PWD CROSS_COMPILE=$CROSS_COMPILE tegra_defconfig dtbs zImage modules
-sudo cp $TOP/out/build/linux/arch/arm/boot/zImage $SYSROOT/boot/zImage-upstream
+sudo cp $TOP/out/build/$DISTRO/linux/arch/arm/boot/zImage $SYSROOT/boot/zImage-upstream
 if [ -f $SYSROOT/boot/zImage ]; then
-    sudo mv $SYSROOT/boot/zImage $SYSROOT/boot/zImage-l4t
+    sudo mv $SYSROOT/boot/zImage $SYSROOT/boot/zImage-old
 fi
 sudo ln -sfr $SYSROOT/boot/zImage-upstream $SYSROOT/boot/zImage
 sudo mkdir -p $SYSROOT/boot/dtb-upstream
-sudo cp $TOP/out/build/linux/arch/arm/boot/dts/tegra124-* $SYSROOT/boot/dtb-upstream/
+sudo cp $TOP/out/build/$DISTRO/linux/arch/arm/boot/dts/tegra124-* $SYSROOT/boot/dtb-upstream/
 sudo make -C $TOP/linux ARCH=arm O=$PWD CROSS_COMPILE=$CROSS_COMPILE INSTALL_MOD_PATH=$SYSROOT modules_install
 sudo $TOP/tegra-uboot-scripts/gen-uboot-script.py --dtb-dir /boot/dtb-upstream --cmdline "cma=256M nouveau.pstate=1 text" -o $SYSROOT/boot/boot-upstream.scr
 sudo ln -sfr $SYSROOT/boot/boot-upstream.scr $SYSROOT/boot/boot.scr

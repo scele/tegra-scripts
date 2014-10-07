@@ -1,5 +1,8 @@
 set -e
 
+# TODO Hardcoded for now
+DISTRO=L4T
+
 status()
 {
     echo -e "\e[1m"$*"\e[0m "
@@ -16,16 +19,21 @@ if [[ -z "$TOP" ]]; then
     exit 1
 fi
 
-#### helpers
-if [[ -z "$PACKAGE" ]]; then
-    error "Error: PACKAGE var not set."
+if [[ -z "$DISTRO" ]]; then
+    error "Error: DISTRO env var not set."
     exit 1
 fi
 
+#### helpers
 cd_package()
 {
-    mkdir -p $TOP/out/build/$PACKAGE
-    cd $TOP/out/build/$PACKAGE
+    if [[ -z "$PACKAGE" ]]; then
+        error "Error: PACKAGE var not set."
+        exit 1
+    fi
+
+    mkdir -p $TOP/out/build/$DISTRO/$PACKAGE
+    cd $TOP/out/build/$DISTRO/$PACKAGE
 }
 
 package_success()
@@ -35,14 +43,19 @@ package_success()
 
 run_autogen()
 {
-    if [ ! -f "$TOP/out/build/$PACKAGE/Makefile" ]; then
+    if [[ -z "$PACKAGE" ]]; then
+        error "Error: PACKAGE var not set."
+        exit 1
+    fi
+
+    if [ ! -f "$TOP/out/build/$DISTRO/$PACKAGE/Makefile" ]; then
         $TOP/$PACKAGE/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT $*
     fi
 }
 
 run_make()
 {
-	make DESTDIR=$SYSROOT -j$NPROC $*
+    make DESTDIR=$SYSROOT -j$NPROC $*
 }
 ####
 
@@ -59,8 +72,6 @@ PATH="$TOP/$LINARO_GCC_PACKAGE/bin:$PATH"
 # TODO change this!
 PREFIX=/home/ubuntu/usr
 
-DISTRO=L4T
-
 #### user-space only flags!
 export SYSROOT="$TOP/out/target/$DISTRO"
 export CFLAGS="--sysroot=$SYSROOT"
@@ -72,9 +83,6 @@ export PKG_CONFIG_PATH="$SYSROOT/$PREFIX/lib/pkgconfig"
 export PKG_CONFIG=pkg-config
 ####
 
-#### ubuntu-specific user-space flags
-NEWCFLAGS="-I$SYSROOT/usr/include/arm-linux-gnueabihf -L$SYSROOT/lib/arm-linux-gnueabihf -L$SYSROOT/usr/lib/arm-linux-gnueabihf"
-export CFLAGS="$CFLAGS $NEWCFLAGS"
-export CXXFLAGS="$CXXFLAGS $NEWCFLAGS"
-export PKG_CONFIG_LIBDIR="$SYSROOT/usr/lib/arm-linux-gnueabihf/pkgconfig:$PKG_CONFIG_LIBDIR"
-####
+if [ -f scripts/distro/env-$DISTRO ]; then
+    . scripts/distro/env-$DISTRO
+fi
