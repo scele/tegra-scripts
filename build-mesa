@@ -8,7 +8,7 @@ PACKAGE=mesa
 
 cd_package
 
-run_autogen --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT \
+run_autogen \
 --without-dri-drivers \
 --with-gallium-drivers=nouveau \
 --enable-gallium-egl \
@@ -20,7 +20,7 @@ run_autogen --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT
 --enable-opengl \
 --enable-osmesa
 
-make -j$NPROC
-make DESTDIR=$SYSROOT install
+run_make
+run_make install
 
 package_success

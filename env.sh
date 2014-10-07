@@ -1,3 +1,5 @@
+set -e
+
 status()
 {
     echo -e "\e[1m"$*"\e[0m "
@@ -14,25 +16,16 @@ if [[ -z "$TOP" ]]; then
     exit 1
 fi
 
+#### helpers
+if [[ -z "$PACKAGE" ]]; then
+    error "Error: PACKAGE var not set."
+    exit 1
+fi
+
 cd_package()
 {
-    if [[ -z "$PACKAGE" ]]; then
-        error "Error: PACKAGE var not set."
-        exit 1
-    fi
     mkdir -p $TOP/out/build/$PACKAGE
     cd $TOP/out/build/$PACKAGE
-}
-
-run_autogen()
-{
-    if [[ -z "$PACKAGE" ]]; then
-        error "Error: PACKAGE var not set."
-        exit 1
-    fi
-    if [ ! -f "$TOP/out/build/$PACKAGE/Makefile" ]; then
-        $TOP/$PACKAGE/autogen.sh $*
-    fi
 }
 
 package_success()
@@ -40,33 +33,48 @@ package_success()
     status "Installation of $PACKAGE successful!"
 }
 
+run_autogen()
+{
+    if [ ! -f "$TOP/out/build/$PACKAGE/Makefile" ]; then
+        $TOP/$PACKAGE/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT $*
+    fi
+}
+
+run_make()
+{
+	make DESTDIR=$SYSROOT -j$NPROC $*
+}
+####
+
+NPROC=$(nproc)
+
+#### toolchain-specific settings
+CROSS_COMPILE=arm-linux-gnueabihf-
 LINARO_GCC_VERSION=4.8
 LINARO_GCC_RELEASE=14.04
 LINARO_GCC_PACKAGE=gcc-linaro-arm-linux-gnueabihf-${LINARO_GCC_VERSION}-20${LINARO_GCC_RELEASE}_linux
-
-if [[ -z "$CROSS_COMPILE" ]]; then
-    PATH="$TOP/$LINARO_GCC_PACKAGE/bin:$PATH"
-    CROSS_COMPILE=arm-linux-gnueabihf-
-fi
-
-NPROC=`nproc`
+PATH="$TOP/$LINARO_GCC_PACKAGE/bin:$PATH"
+####
 
 # TODO change this!
 PREFIX=/home/ubuntu/usr
 
-export SYSROOT="$TOP/out/target/L4T"
+DISTRO=L4T
 
+#### user-space only flags!
+export SYSROOT="$TOP/out/target/$DISTRO"
+export CFLAGS="--sysroot=$SYSROOT"
+export CXXFLAGS="$CFLAGS"
 export PKG_CONFIG_SYSROOT_DIR=$SYSROOT
 export PKG_CONFIG_LIBDIR="$SYSROOT/usr/lib/pkgconfig:$SYSROOT/usr/share/pkgconfig"
 export PKG_CONFIG_PATH="$SYSROOT/$PREFIX/lib/pkgconfig"
 # Use system pkg-config as the toolchain's one is too old (0.25) to handle PKG_CONFIG_SYSROOT_DIR correctly.
 export PKG_CONFIG=pkg-config
-
-export CFLAGS="--sysroot=$SYSROOT"
-
-# distro-specific flags
-export CFLAGS="$CFLAGS -I$SYSROOT/usr/include/arm-linux-gnueabihf -I$SYSROOT/usr/include -L$SYSROOT/lib/arm-linux-gnueabihf -L$SYSROOT/usr/lib/arm-linux-gnueabihf"
-export PKG_CONFIG_LIBDIR="$SYSROOT/usr/lib/arm-linux-gnueabihf/pkgconfig:$PKG_CONFIG_LIBDIR"
-
 ####
-export CXXFLAGS="$CFLAGS"
+
+#### ubuntu-specific user-space flags
+NEWCFLAGS="-I$SYSROOT/usr/include/arm-linux-gnueabihf -L$SYSROOT/lib/arm-linux-gnueabihf -L$SYSROOT/usr/lib/arm-linux-gnueabihf"
+export CFLAGS="$CFLAGS $NEWCFLAGS"
+export CXXFLAGS="$CXXFLAGS $NEWCFLAGS"
+export PKG_CONFIG_LIBDIR="$SYSROOT/usr/lib/arm-linux-gnueabihf/pkgconfig:$PKG_CONFIG_LIBDIR"
+####
