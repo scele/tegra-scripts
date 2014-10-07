@@ -11,7 +11,7 @@ root=$SYSROOT
 
 if [ ! -f "$outfile" ]; then
     status "Downloading rootfs..."
-    curl https://developer.nvidia.com/sites/default/files/akamai/mobile/files/L4T/$f -o $outfile
+    wget https://developer.nvidia.com/sites/default/files/akamai/mobile/files/L4T/$f -O $outfile
 fi
 
 # Do not overwrite or remove existing rootfs. The user might have copied or linked an already existing rootfs there.
@@ -27,7 +27,7 @@ root=$TOP/out/Linux_for_Tegra
 
 if [ ! -f "$outfile" ]; then
     status "Downloading binary drivers..."
-    curl https://developer.nvidia.com/sites/default/files/akamai/mobile/files/L4T/$f -o $outfile
+    wget https://developer.nvidia.com/sites/default/files/akamai/mobile/files/L4T/$f -O $outfile
 fi
 
 if [ ! -e "$root" ]; then

@@ -9,7 +9,7 @@ mkdir -p $TOP/out
 outfile=$TOP/out/$f
 url="https://releases.linaro.org/${LINARO_GCC_RELEASE}/components/toolchain/binaries/$f"
 status "Downloading $url..."
-curl $url -o $outfile
+wget $url -O $outfile
 
 status "Extracting..."
 mkdir -p $TOP
