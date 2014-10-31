@@ -51,7 +51,7 @@ fi
 if [ ! -f "$SYSROOT/usr/bin/qemu-arm-static" ]; then
     status "Installing qemu-arm-static binary into target FS..."
     QEMUDEB=$(mktemp)
-    wget http://ftp.debian.org/debian/pool/main/q/qemu/qemu-user-static_2.1+dfsg-5_i386.deb -O $QEMUDEB
+    wget http://snapshot.debian.org/archive/debian/20141030T220503Z/pool/main/q/qemu/qemu-user-static_2.1%2Bdfsg-5%2Bb1_i386.deb -O $QEMUDEB
     ${CROSS_COMPILE}ar p $QEMUDEB data.tar.xz|sudo tar xJf - -C $SYSROOT ./usr/bin/qemu-arm-static
     rm -f $QEMUDEB
 fi
