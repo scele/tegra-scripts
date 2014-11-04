@@ -2,6 +2,8 @@ set -e
 
 # TODO Hardcoded for now
 DISTRO=L4T
+# Where all the programs/libraries from these scripts will be installed
+NV_PREFIX=/opt/nouveau
 
 status()
 {
@@ -49,7 +51,7 @@ run_autogen()
     fi
 
     if [ ! -f "$TOP/out/build/$DISTRO/$PACKAGE/Makefile" ]; then
-        $TOP/$PACKAGE/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT $*
+        $TOP/$PACKAGE/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$NV_PREFIX --with-sysroot=$SYSROOT $*
     fi
 }
 
@@ -69,16 +71,13 @@ LINARO_GCC_PACKAGE=gcc-linaro-arm-linux-gnueabihf-${LINARO_GCC_VERSION}-20${LINA
 PATH="$TOP/$LINARO_GCC_PACKAGE/bin:$PATH"
 ####
 
-# TODO change this!
-PREFIX=/home/ubuntu/usr
-
 #### user-space only flags!
 export SYSROOT="$TOP/out/target/$DISTRO"
 export CFLAGS="--sysroot=$SYSROOT"
 export CXXFLAGS="$CFLAGS"
 export PKG_CONFIG_SYSROOT_DIR=$SYSROOT
 export PKG_CONFIG_LIBDIR="$SYSROOT/usr/lib/pkgconfig:$SYSROOT/usr/share/pkgconfig"
-export PKG_CONFIG_PATH="$SYSROOT/$PREFIX/lib/pkgconfig"
+export PKG_CONFIG_PATH="$SYSROOT/$NV_PREFIX/lib/pkgconfig"
 # Use system pkg-config as the toolchain's one is too old (0.25) to handle PKG_CONFIG_SYSROOT_DIR correctly.
 export PKG_CONFIG=pkg-config
 ####

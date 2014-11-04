@@ -18,7 +18,7 @@ run_make
 # Use fakeroot since a weston-launch is attempted to be root suid
 fakeroot make DESTDIR=$SYSROOT install
 # Fix permissions of weston-launch which was installed using fakeroot
-sudo chown root $SYSROOT/$PREFIX/bin/weston-launch
-sudo chmod u+s $SYSROOT/$PREFIX/bin/weston-launch
+sudo chown root $SYSROOT/$NV_PREFIX/bin/weston-launch
+sudo chmod u+s $SYSROOT/$NV_PREFIX/bin/weston-launch
 
 package_success

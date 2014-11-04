@@ -62,4 +62,10 @@ status "Restoring target's resolv.conf..."
 sudo rm -f $SYSROOT/etc/resolv.conf
 sudo mv $SYSROOT/etc/resolv.conf.rootfs-backup $SYSROOT/etc/resolv.conf
 
+if [ ! -d $SYSROOT/$NV_PREFIX ]; then
+    status "Creating $NV_PREFIX"
+    sudo mkdir $SYSROOT/$NV_PREFIX
+    sudo chown -R $USER $SYSROOT/$NV_PREFIX
+fi
+
 status "Target FS ready to compile the open graphics stack!"
