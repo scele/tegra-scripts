@@ -68,4 +68,12 @@ if [ ! -d $SYSROOT/$NV_PREFIX ]; then
     sudo chown -R $USER $SYSROOT/$NV_PREFIX
 fi
 
+status "Adding environment to /etc/profile.d/nouveau.sh"
+cat <<EOF |sudo tee $SYSROOT/etc/profile.d/nouveau.sh >/dev/null
+NV_PREFIX="$NV_PREFIX"
+export PATH="\$NV_PREFIX/bin:\$PATH"
+export LD_LIBRARY_PATH="\$NV_PREFIX/lib:\$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="\$NV_PREFIX/lib/pkgconfig:\$PKG_CONFIG_PATH"
+EOF
+
 status "Target FS ready to compile the open graphics stack!"
