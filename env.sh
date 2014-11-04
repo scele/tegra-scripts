@@ -75,9 +75,11 @@ PATH="$TOP/$LINARO_GCC_PACKAGE/bin:$PATH"
 export SYSROOT="$TOP/out/target/$DISTRO"
 export CFLAGS="--sysroot=$SYSROOT"
 export CXXFLAGS="$CFLAGS"
-export PKG_CONFIG_SYSROOT_DIR=$SYSROOT
-export PKG_CONFIG_LIBDIR="$SYSROOT/usr/lib/pkgconfig:$SYSROOT/usr/share/pkgconfig"
-export PKG_CONFIG_PATH="$SYSROOT/$NV_PREFIX/lib/pkgconfig"
+
+export PKG_CONFIG_DIR=
+export PKG_CONFIG_LIBDIR="${SYSROOT}/usr/lib/arm-linux-gnueabihf/pkgconfig":"${SYSROOT}/usr/lib/pkgconfig":"${SYSROOT}/usr/share/pkgconfig"
+export PKG_CONFIG_SYSROOT_DIR="${SYSROOT}"
+export PKG_CONFIG_PATH="${SYSROOT}/${NV_PREFIX}/lib/pkgconfig"
 # Use system pkg-config as the toolchain's one is too old (0.25) to handle PKG_CONFIG_SYSROOT_DIR correctly.
 export PKG_CONFIG=pkg-config
 ####
