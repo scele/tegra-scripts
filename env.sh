@@ -1,9 +1,13 @@
 set -e
 
-# TODO Hardcoded for now
-DISTRO=L4T
+if [[ -z "$DISTRO" ]]; then
+    DISTRO=L4T
+fi
+
 # Where all the programs/libraries from these scripts will be installed
-NV_PREFIX=/opt/nouveau
+if [[ -z "$NV_PREFIX" ]]; then
+    NV_PREFIX=/opt/nouveau
+fi
 
 status()
 {
