@@ -42,12 +42,6 @@ if [ ! -e $SYSROOT ]; then
     exit 1
 fi
 
-if [ ! -f "$SYSROOT/etc/resolv.conf.rootfs-backup" ]; then
-    status "Fixing target's resolv.conf..."
-    sudo mv $SYSROOT/etc/resolv.conf $SYSROOT/etc/resolv.conf.rootfs-backup
-    sudo cp /etc/resolv.conf $SYSROOT/etc/resolv.conf
-fi
-
 if [ ! -f "$SYSROOT/usr/bin/qemu-arm-static" ]; then
     status "Installing qemu-arm-static binary into target FS..."
     QEMUDEB=$(mktemp)
@@ -56,11 +50,17 @@ if [ ! -f "$SYSROOT/usr/bin/qemu-arm-static" ]; then
     rm -f $QEMUDEB
 fi
 
+# Fix target's resolv.conf so we can download packages
+if [ ! -f "$SYSROOT/etc/resolv.conf.rootfs-nvbackup" ]; then
+    sudo mv $SYSROOT/etc/resolv.conf $SYSROOT/etc/resolv.conf.rootfs-nvbackup
+fi
+sudo cp /etc/resolv.conf $SYSROOT/etc/resolv.conf
+
 . scripts/distro/prepare-$DISTRO
 
-status "Restoring target's resolv.conf..."
+# Restore target's resolv.conf now that packages are installed"
 sudo rm -f $SYSROOT/etc/resolv.conf
-sudo mv $SYSROOT/etc/resolv.conf.rootfs-backup $SYSROOT/etc/resolv.conf
+sudo mv $SYSROOT/etc/resolv.conf.rootfs-nvbackup $SYSROOT/etc/resolv.conf
 
 if [ ! -d $SYSROOT/$NV_PREFIX ]; then
     status "Creating $NV_PREFIX"
