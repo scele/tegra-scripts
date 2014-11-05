@@ -68,11 +68,13 @@ if [ ! -d $SYSROOT/$NV_PREFIX ]; then
     sudo chown -R $USER $SYSROOT/$NV_PREFIX
 fi
 
-status "Fixing permissions in /boot and /lib/modules"
+status "Fixing permissions in /boot, /lib/modules and /lib/firmware"
 sudo mkdir -p $SYSROOT/boot
 sudo chown -R $USER $SYSROOT/boot
 sudo mkdir -p $SYSROOT/lib/modules
 sudo chown -R $USER $SYSROOT/lib/modules
+sudo mkdir -p $SYSROOT/lib/firmware
+sudo chown -R $USER $SYSROOT/lib/firmware
 
 status "Adding environment to /etc/profile.d/nouveau.sh"
 cat <<EOF |sudo tee $SYSROOT/etc/profile.d/nouveau.sh >/dev/null
