@@ -36,17 +36,18 @@ status "Using qemu to install required packages on target FS..."
 run_in_qemu /usr/bin/apt-get update
 run_in_qemu /usr/bin/apt-get -y install $ubuntu_packages
 # Installing libudev-dev might upgrade udev, which will fail because upstart is not running.
-# Install it independently and forcibly to about this.
-run_in_qemu /usr/bin/apt-get download libudev-dev
-run_in_qemu /usr/bin/dpkg --force-depends -i $(basename $SYSROOT/libudev-dev*.deb)
-rm -f $SYSROOT/libudev-dev*.deb
+# Install it independently and forcibly to avoid this.
+if ! run_in_qemu /usr/bin/dpkg-query -l libudev-dev |grep '^ii' >/dev/null; then
+    run_in_qemu /usr/bin/apt-get download libudev-dev
+    run_in_qemu /usr/bin/dpkg --force-depends -i $(basename $SYSROOT/libudev-dev*.deb)
+    rm -f $SYSROOT/libudev-dev*.deb
+    status "You might have to run 'apt-get -f install' to fix packages dependencies on the next boot"
+fi
 
 # Fix the absolute symlinks in the target filesystem that will prevent us
-# from linking to them
+# from linking to the right libraries
 status "Fixing libraries symlinks..."
 run_in_qemu /usr/bin/symlinks -cr /lib /usr/lib
-
-status "You might have to run 'apt-get -f install' to fix packages dependencies on the next boot"
 
 read -p "Are you going to boot this image using NFS? (y/n) " choice
 case "$choice" in
