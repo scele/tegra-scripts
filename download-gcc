@@ -20,4 +20,23 @@ if [ ! -e "$TOP/$LINARO_GCC_PACKAGE" ]; then
     rm $outfile
 fi
 
+PKG_CONFIG_VERSION=0.28
+outfile=$TOP/out/pkg-config-$PKG_CONFIG_VERSION.tar.gz
+url=http://pkgconfig.freedesktop.org/releases/pkg-config-$PKG_CONFIG_VERSION.tar.gz
+if [ ! -f "$outfile" ]; then
+    status "Downloading $url"
+    wget $url -O $outfile
+fi
+
+if [ ! -e "$TOP/pkg-config-$PKG_CONFIG_VERSION" ]; then
+    tar xfz $outfile -C $TOP
+fi
+
+if [ ! -f "$TOP/$LINARO_GCC_PACKAGE/bin/pkg-config" ]; then
+    cd $TOP/pkg-config-$PKG_CONFIG_VERSION
+    unset CFLAGS CXXFLAGS CROSS_COMPILE SYSROOT PKG_CONFIG_DIR PKG_CONFIG_LIBDIR PKG_CONFIG_SYSROOT_DIR PKG_CONFIG_PATH PKG_CONFIG
+    ./configure && make
+    cp $TOP/pkg-config-$PKG_CONFIG_VERSION/pkg-config $TOP/$LINARO_GCC_PACKAGE/bin
+fi
+
 status "Cross-compilation toolchain successfully downloaded"
