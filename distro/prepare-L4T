@@ -47,3 +47,15 @@ status "Fixing libraries symlinks..."
 run_in_qemu /usr/bin/symlinks -cr /lib /usr/lib
 
 status "You might have to run 'apt-get -f install' to fix packages dependencies on the next boot"
+
+read -p "Are you going to boot this image using NFS? (y/n) " choice
+case "$choice" in
+      y|Y )
+        sudo sed -i '/^iface eth0/d' $SYSROOT/etc/network/interfaces
+        echo "iface eth0 inet manual" |sudo tee -a $SYSROOT/etc/network/interfaces >/dev/null
+        ;;
+      n|N )
+        sudo sed -i '/^iface eth0 inet manual/d' $SYSROOT/etc/network/interfaces
+        ;;
+      * ) ;;
+esac
