@@ -13,6 +13,6 @@ fi
 cd_package
 
 make -j$NPROC ARCH=arm CROSS_COMPILE=$CROSS_COMPILE O=$PWD M=$TOP/nouveau/drm -C $TOP/out/build/$DISTRO/linux modules
-sudo make ARCH=arm CROSS_COMPILE=$CROSS_COMPILE O=$PWD M=$TOP/nouveau/drm INSTALL_MOD_PATH=$SYSROOT -C $TOP/out/build/$DISTRO/linux modules_install
+make ARCH=arm CROSS_COMPILE=$CROSS_COMPILE O=$PWD M=$TOP/nouveau/drm INSTALL_MOD_PATH=$SYSROOT -C $TOP/out/build/$DISTRO/linux modules_install
 
 package_success
