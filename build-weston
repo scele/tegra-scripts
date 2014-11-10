@@ -12,7 +12,8 @@ mkdir -p m4
 run_autogen \
 --disable-x11-compositor \
 --disable-rpi-compositor \
---enable-demo-clients-install
+--enable-demo-clients-install \
+--disable-libinput-backend
 
 run_make
 # Use fakeroot since a weston-launch is attempted to be root suid
