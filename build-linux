@@ -13,7 +13,13 @@ run_make_kernel()
     make -C $TOP/linux ARCH=arm O=$PWD CROSS_COMPILE=$CROSS_COMPILE INSTALL_MOD_PATH=$SYSROOT $*
 }
 
-run_make_kernel -j$NPROC tegra_defconfig dtbs zImage modules
+# Create config is none exists yet
+if [ ! -f $TOP/out/build/$DISTRO/linux/.config ]; then
+    run_make_kernel tegra_defconfig
+fi
+
+# Build all that we need
+run_make_kernel -j$NPROC oldconfig dtbs zImage modules
 
 # Install zImage
 cp $TOP/out/build/$DISTRO/linux/arch/arm/boot/zImage $SYSROOT/boot/zImage-upstream
