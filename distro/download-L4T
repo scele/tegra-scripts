@@ -1,10 +1,10 @@
-f=Tegra_Linux_Sample-Root-Filesystem_R19.3.0_armhf.tbz2
+f=Tegra_Linux_Sample-Root-Filesystem_R21.1.0_armhf.tbz2
 outfile=$TOP/out/$f
 root=$SYSROOT
 
 if [ ! -f "$outfile" ]; then
     status "Downloading rootfs..."
-    wget https://developer.nvidia.com/sites/default/files/akamai/mobile/files/L4T/$f -O $outfile
+    wget http://developer.download.nvidia.com/mobile/tegra/l4t/r21.1.0/$f -O $outfile
 fi
 
 # Do not overwrite or remove existing rootfs. The user might have copied or linked an already existing rootfs there.
@@ -19,13 +19,13 @@ echo "Do you also want to install the NVIDIA L4T binaries?"
 read -p "These binaries are not needed to run the Free graphics stack, but will allow you to also use L4T and the proprietary NVIDIA driver on this filesystem if you wish to. (y/n) " choice
 case "$choice" in
     y|Y )
-        f=Tegra124_Linux_R19.3.0_armhf.tbz2
+        f=Tegra124_Linux_R21.1.0_armhf.tbz2
         outfile=$TOP/out/$f
         root=$TOP/out/Linux_for_Tegra
 
         if [ ! -f "$outfile" ]; then
             status "Downloading binary drivers..."
-            wget https://developer.nvidia.com/sites/default/files/akamai/mobile/files/L4T/$f -O $outfile
+            wget http://developer.download.nvidia.com/mobile/tegra/l4t/r21.1.0/$f -O $outfile
         fi
 
         if [ ! -e "$root" ]; then
