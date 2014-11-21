@@ -1,0 +1,2 @@
+# Ubuntu 14.04 does not have libinput 0.6.0
+WESTON_CONFIG_DISTRO_OPTIONS="--disable-libinput-backend"
