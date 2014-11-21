@@ -60,3 +60,19 @@ case "$choice" in
         ;;
       * ) ;;
 esac
+
+status "Adding a serial console service..."
+cat <<EOF |sudo tee $SYSROOT/etc/init/ttyS0.conf >/dev/null
+description     "Get a getty on ttyS0"
+
+start on stopped rc RUNLEVEL=[2345] and (
+            not-container or
+            container CONTAINER=lxc or
+            container CONTAINER=lxc-libvirt)
+
+stop on runlevel [!2345]
+
+respawn
+
+exec /sbin/getty -a ubuntu -L 115200 ttyS0
+EOF
