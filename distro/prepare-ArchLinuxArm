@@ -11,6 +11,7 @@ libxshmfence
 libxcursor
 libxkbcommon-x11
 libjpeg-turbo
+libinput
 cairo
 mtdev
 "
