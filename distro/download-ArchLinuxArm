@@ -4,7 +4,7 @@ root=$SYSROOT
 
 if [ ! -f "$outfile" ]; then
     status "Downloading rootfs..."
-    wget http://archlinuxarm.org/os/$f -O $outfile
+    wget http://os.archlinuxarm.org/os/$f -O $outfile
 fi
 
 # Do not overwrite or remove existing rootfs. The user might have copied or linked an already existing rootfs there.
