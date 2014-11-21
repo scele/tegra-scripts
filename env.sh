@@ -25,11 +25,6 @@ if [[ -z "$TOP" ]]; then
     exit 1
 fi
 
-if [[ -z "$DISTRO" ]]; then
-    error "Error: DISTRO env var not set."
-    exit 1
-fi
-
 #### helpers
 cd_package()
 {
