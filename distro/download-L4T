@@ -4,14 +4,14 @@ root=$SYSROOT
 
 if [ ! -f "$outfile" ]; then
     status "Downloading rootfs..."
-    wget http://developer.download.nvidia.com/mobile/tegra/l4t/r21.1.0/$f -O $outfile
+    wget http://developer.download.nvidia.com/mobile/tegra/l4t/r21.1.0/$f -O $outfile || { rm $outfile; exit 1; }
 fi
 
 # Do not overwrite or remove existing rootfs. The user might have copied or linked an already existing rootfs there.
 if [ ! -e "$root" ]; then
     status "Extracting rootfs..."
     mkdir -p $root
-    sudo tar xpf $outfile -C $root
+    sudo tar xpf $outfile -C $root || { sudo rm $root -Rf; exit 1; }
 fi
 
 # Do you also want to install the proprietary NVIDIA L4T binaries?
@@ -25,13 +25,13 @@ case "$choice" in
 
         if [ ! -f "$outfile" ]; then
             status "Downloading binary drivers..."
-            wget http://developer.download.nvidia.com/mobile/tegra/l4t/r21.1.0/$f -O $outfile
+            wget http://developer.download.nvidia.com/mobile/tegra/l4t/r21.1.0/$f -O $outfile || { rm $outfile; exit 1; }
         fi
 
         if [ ! -e "$root" ]; then
             status "Extracting binary drivers..."
             cd $TOP/out
-            sudo tar xpf $outfile
+            sudo tar xpf $outfile || { sudo rm $root -Rf; exit 1; }
         fi
 
         cd $root

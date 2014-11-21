@@ -4,12 +4,12 @@ root=$SYSROOT
 
 if [ ! -f "$outfile" ]; then
     status "Downloading rootfs..."
-    wget http://os.archlinuxarm.org/os/$f -O $outfile
+    wget http://os.archlinuxarm.org/os/$f -O $outfile || { rm $outfile; exit 1; }
 fi
 
 # Do not overwrite or remove existing rootfs. The user might have copied or linked an already existing rootfs there.
 if [ ! -e "$root" ]; then
     status "Extracting rootfs..."
     mkdir -p $root
-    sudo tar xpf $outfile -C $root
+    sudo tar xpf $outfile -C $root || { sudo rm $root -Rf; exit 1; }
 fi
