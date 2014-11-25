@@ -22,6 +22,7 @@ fi
 
 # Now cross compile a few tools that we will need locally...
 unset CFLAGS CXXFLAGS CROSS_COMPILE SYSROOT PKG_CONFIG_DIR PKG_CONFIG_LIBDIR PKG_CONFIG_SYSROOT_DIR PKG_CONFIG_PATH PKG_CONFIG
+export PATH="$SYSTEM_PATH"
 
 # pkg-config
 PKG_CONFIG_VERSION=0.28
