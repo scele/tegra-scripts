@@ -14,6 +14,7 @@ libjpeg-turbo
 libinput
 cairo
 mtdev
+xorg-server-xwayland
 "
 
 status "Using qemu to install required packages on target FS..."
@@ -21,7 +22,7 @@ sudo mount -t proc proc $SYSROOT/proc
 run_in_qemu pacman -Sy --needed --noconfirm $ARCH_PACKAGES
 sudo umount $SYSROOT/proc
 
-echo "Fixing symlinks in target FS' /usr/lib..."
+status "Fixing symlinks in target FS' /usr/lib..."
 LINKS=$(find $SYSROOT/usr/lib -type l)
 for LINK in $LINKS; do
     L=$(readlink $LINK)
@@ -32,3 +33,7 @@ for LINK in $LINKS; do
         sudo ln -sf $RL $LINK
     fi
 done
+
+status "Linking Xwayland to /opt/nouveau/bin..."
+mkdir -p $SYSROOT/opt/nouveau/bin
+ln -sf /usr/bin/Xwayland $SYSROOT/opt/nouveau/bin/Xwayland

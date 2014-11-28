@@ -50,6 +50,9 @@ if [ ! -f "$SYSROOT/usr/bin/qemu-arm-static" ]; then
     rm -f $QEMUDEB
 fi
 
+sudo mkdir -p $SYSROOT/opt/nouveau
+sudo chown -R $USER $SYSROOT/opt/nouveau
+
 # Fix target's resolv.conf so we can download packages
 if [ ! -f "$SYSROOT/etc/resolv.conf.rootfs-nvbackup" ]; then
     sudo mv $SYSROOT/etc/resolv.conf $SYSROOT/etc/resolv.conf.rootfs-nvbackup
