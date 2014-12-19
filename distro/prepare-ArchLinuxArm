@@ -28,7 +28,7 @@ for LINK in $LINKS; do
     L=$(readlink $LINK)
     if [[ "$L" = /* ]]; then
         R=$(dirname $LINK)
-        RL=$(realpath --relative-to ${R#"$SYSROOT"} $L)
+        RL=$(realpath -m --relative-to ${R#"$SYSROOT"} $L)
         echo Linking $LINK to $RL
         sudo ln -sf $RL $LINK
     fi
