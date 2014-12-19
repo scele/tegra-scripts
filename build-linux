@@ -39,7 +39,7 @@ KREL=$(run_make_kernel -s kernelrelease)
 rm -Rf $SYSROOT/lib/modules/$KREL/kernel/drivers/gpu/drm/nouveau
 
 # Generate boot script
-$TOP/tegra-uboot-scripts/gen-uboot-script.py --dtb-dir /boot/dtb-upstream --cmdline "cma=256M nouveau.pstate=1 text" -o $SYSROOT/boot/boot-upstream.scr
+$TOP/tegra-uboot-scripts/gen-uboot-script.py --dtb-dir /boot/dtb-upstream --cmdline "nouveau.pstate=1 text" -o $SYSROOT/boot/boot-upstream.scr
 ln -sfr $SYSROOT/boot/boot-upstream.scr $SYSROOT/boot/boot.scr
 
 package_success
