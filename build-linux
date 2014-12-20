@@ -22,15 +22,11 @@ fi
 run_make_kernel -j$NPROC oldconfig dtbs zImage modules
 
 # Install zImage
-cp $TOP/out/build/$DISTRO/linux/arch/arm/boot/zImage $SYSROOT/boot/zImage-upstream
-if [ -f $SYSROOT/boot/zImage ]; then
-    mv $SYSROOT/boot/zImage $SYSROOT/boot/zImage-old
-fi
-ln -sfr $SYSROOT/boot/zImage-upstream $SYSROOT/boot/zImage
+cp $TOP/out/build/$DISTRO/linux/arch/arm/boot/zImage $SYSROOT/boot/zImage-nouveau
 
 # Install dtbs
-mkdir -p $SYSROOT/boot/dtb-upstream
-cp $TOP/out/build/$DISTRO/linux/arch/arm/boot/dts/tegra124-* $SYSROOT/boot/dtb-upstream/
+mkdir -p $SYSROOT/boot/dtb-nouveau
+cp $TOP/out/build/$DISTRO/linux/arch/arm/boot/dts/tegra124-* $SYSROOT/boot/dtb-nouveau
 
 # Install modules
 run_make_kernel modules_install
@@ -39,7 +35,7 @@ KREL=$(run_make_kernel -s kernelrelease)
 rm -Rf $SYSROOT/lib/modules/$KREL/kernel/drivers/gpu/drm/nouveau
 
 # Generate boot script
-$TOP/tegra-uboot-scripts/gen-uboot-script.py --dtb-dir /boot/dtb-upstream --cmdline "nouveau.pstate=1 text" -o $SYSROOT/boot/boot-upstream.scr
-ln -sfr $SYSROOT/boot/boot-upstream.scr $SYSROOT/boot/boot.scr
+$TOP/tegra-uboot-scripts/gen-uboot-script.py --zimage zImage-nouveau --dtb-dir /boot/dtb-nouveau --cmdline "nouveau.pstate=1 text" -o $SYSROOT/boot/boot-nouveau.scr
+ln -sfr $SYSROOT/boot/boot-nouveau.scr $SYSROOT/boot/boot.scr
 
 package_success
