@@ -30,6 +30,7 @@ libwayland-dev
 libdbus-1-dev
 libpixman-1-dev
 libsystemd-login-dev
+libevdev-dev
 "
 
 status "Using qemu to install required packages on target FS..."

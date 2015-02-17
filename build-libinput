@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -e
+
+PACKAGE=libinput
+
+. scripts/env.sh
+
+cd_package
+
+run_autogen
+
+run_make
+run_make install
+
+package_success
