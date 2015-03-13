@@ -11,7 +11,6 @@ cd_package
 run_autogen \
 --without-dri-drivers \
 --with-gallium-drivers=nouveau \
---enable-gallium-egl \
 --enable-gbm \
 --enable-egl \
 --with-egl-platforms=drm,wayland \
