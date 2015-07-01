@@ -13,7 +13,9 @@ run_autogen \
 --disable-cairo-tests \
 --disable-intel \
 --disable-radeon \
---disable-vmwgfx
+--disable-vmwgfx \
+--disable-freedreno \
+--enable-static
 
 run_make
 run_make install
