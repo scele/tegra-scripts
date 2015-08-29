@@ -15,6 +15,7 @@ run_autogen \
 --disable-radeon \
 --disable-vmwgfx \
 --disable-freedreno \
+--disable-valgrind \
 --enable-static
 
 run_make
