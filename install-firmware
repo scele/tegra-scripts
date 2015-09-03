@@ -8,6 +8,6 @@ PACKAGE=linux-firmware
 
 cd_package
 
-cp -R $TOP/$PACKAGE/nouveau $SYSROOT/lib/firmware/
+cp -R $TOP/$PACKAGE/nvidia $SYSROOT/lib/firmware/
 
 package_success
