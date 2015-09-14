@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -e
+
+PACKAGE=xserver
+
+. scripts/env.sh
+
+cd_package
+
+run_autogen \
+--enable-glamor \
+# remove if we install xkeyboard-config and xkbcomp
+--with-xkb-path=/usr/share/X11/xkb
+
+run_make
+# will fail due to xkb - use fakeroot or install xkeyboard-config and xkbcomp as specified on
+# http://www.x.org/wiki/Development/BuildingX/
+run_make install
+
+ln -sf /usr/bin/xkbcomp ${SYSROOT}/${NV_PREFIX}/bin/xkbcomp
+
+package_success
