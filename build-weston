@@ -10,7 +10,6 @@ cd_package
 
 mkdir -p m4
 run_autogen \
---disable-x11-compositor \
 --disable-rpi-compositor \
 --enable-demo-clients-install \
 --disable-wcap-tools \

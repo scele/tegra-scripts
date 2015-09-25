@@ -13,11 +13,15 @@ run_autogen \
 --with-gallium-drivers=nouveau \
 --enable-gbm \
 --enable-egl \
---with-egl-platforms=drm,wayland \
+--with-egl-platforms=drm,x11,wayland \
 --enable-gles1 \
 --enable-gles2 \
 --enable-opengl \
---enable-osmesa
+--enable-osmesa \
+--enable-shared-glapi \
+--enable-dri3 \
+--enable-glx \
+--enable-glx-tls
 
 run_make
 run_make install

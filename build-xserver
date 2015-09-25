@@ -9,11 +9,61 @@ PACKAGE=xserver
 cd_package
 
 run_autogen \
---enable-glamor
+--enable-glamor \
+--enable-dri3 \
+--enable-xwayland \
+--enable-kdrive \
+--enable-kdrive-evdev \
+--enable-config-udev
 
 run_make
 run_make install
 
-# also install xkeyboard-config, xkbcomp and xf86-input-evdev packages
+package_success
+cd $TOP
+
+
+PACKAGE=xf86-input-evdev
+
+. scripts/env.sh
+
+cd_package
+
+run_autogen
+
+run_make
+run_make install
 
 package_success
+cd $TOP
+
+
+PACKAGE=xkeyboard-config
+
+. scripts/env.sh
+
+cd_package
+
+run_autogen
+
+run_make
+run_make install
+
+package_success
+cd $TOP
+
+
+PACKAGE=xkbcomp
+
+. scripts/env.sh
+
+cd_package
+
+run_autogen
+
+run_make
+run_make install
+
+package_success
+cd $TOP
+

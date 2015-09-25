@@ -12,15 +12,41 @@ libxcursor
 libxkbcommon-x11
 libjpeg-turbo
 libinput
+libdrm
 cairo
 mtdev
-xorg-server-xwayland
+wayland
+xcmiscproto
+xtrans
+bigreqsproto
+randrproto
+inputproto
+videoproto
+compositeproto
+recordproto
+scrnsaverproto
+resourceproto
+xf86driproto
+xineramaproto
+xcb-util-keysyms
+xorg-xinit
+xorg-fonts
+xorg-fonts-misc
+xorg-xsetroot
+terminus-font
+ttf-dejavu
+ttf-oxygen
+xterm
+lxde
+mesa-demos
 "
 
 status "Using qemu to install required packages on target FS..."
 sudo mount -t proc proc $SYSROOT/proc
-run_in_qemu pacman -Sy --needed --noconfirm $ARCH_PACKAGES
+run_in_qemu mount --rbind / /
+run_in_qemu pacman -Syu --needed --noconfirm $ARCH_PACKAGES
 sudo umount $SYSROOT/proc
+sudo umount $SYSROOT
 
 status "Fixing symlinks in target FS' /usr/lib..."
 LINKS=$(find $SYSROOT/usr/lib -type l)
@@ -34,6 +60,3 @@ for LINK in $LINKS; do
     fi
 done
 
-status "Linking Xwayland to /opt/nouveau/bin..."
-mkdir -p $SYSROOT/opt/nouveau/bin
-ln -sf /usr/bin/Xwayland $SYSROOT/opt/nouveau/bin/Xwayland
