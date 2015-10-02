@@ -87,4 +87,9 @@ export LD_LIBRARY_PATH="\$NV_PREFIX/lib:\$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="\$NV_PREFIX/lib/pkgconfig:\$PKG_CONFIG_PATH"
 EOF
 
+status "Adding ld.so.conf.d entry for $NV_PREFIX/lib"
+cat <<EOF |sudo tee $SYSROOT/etc/ld.so.conf.d/nouveau.conf >/dev/null
+$NV_PREFIX/lib
+EOF
+
 status "Target FS ready to compile the open graphics stack!"
