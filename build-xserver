@@ -10,6 +10,7 @@ cd_package
 
 run_autogen \
 --enable-glamor \
+--enable-dri2 \
 --enable-dri3 \
 --enable-xwayland \
 --enable-kdrive \
