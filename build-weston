@@ -22,4 +22,14 @@ fakeroot make DESTDIR=$SYSROOT install
 sudo chown root $SYSROOT/$NV_PREFIX/bin/weston-launch
 sudo chmod u+s $SYSROOT/$NV_PREFIX/bin/weston-launch
 
+# Enable Xwayland in configuration
+sudo mkdir -p $SYSROOT/etc/xdg/weston
+cat <<EOF |sudo tee $SYSROOT/etc/xdg/weston/weston.ini >/dev/null
+[core]
+modules=xwayland.so
+
+[xwayland]
+path=/opt/nouveau/bin/Xwayland
+EOF
+
 package_success
