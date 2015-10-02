@@ -39,6 +39,7 @@ ttf-oxygen
 xterm
 lxde
 mesa-demos
+kmscon
 "
 
 status "Using qemu to install required packages on target FS..."
@@ -59,4 +60,7 @@ for LINK in $LINKS; do
         sudo ln -sf $RL $LINK
     fi
 done
+
+status "Updating X server path in /etc..."
+sudo find $SYSROOT/etc -type f -exec sed -i 's/\/usr\/bin\/X\b/\/opt\/nouveau\/bin\/X/g' {} +
 
