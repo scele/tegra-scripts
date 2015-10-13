@@ -1,7 +1,7 @@
 set -e
 
 if [[ -z "$DISTRO" ]]; then
-    DISTRO=L4T
+    DISTRO=ArchLinuxArm
 fi
 
 # Where all the programs/libraries from these scripts will be installed
