@@ -81,10 +81,8 @@ sudo chown -R $USER $SYSROOT/lib/firmware
 
 status "Adding environment to /etc/profile.d/nouveau.sh"
 cat <<EOF |sudo tee $SYSROOT/etc/profile.d/nouveau.sh >/dev/null
-NV_PREFIX="$NV_PREFIX"
-export PATH="\$NV_PREFIX/bin:\$PATH"
-export LD_LIBRARY_PATH="\$NV_PREFIX/lib:\$LD_LIBRARY_PATH"
-export PKG_CONFIG_PATH="\$NV_PREFIX/lib/pkgconfig:\$PKG_CONFIG_PATH"
+export PATH="$NV_PREFIX/bin:\$PATH"
+export PKG_CONFIG_PATH="$NV_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 EOF
 
 status "Adding ld.so.conf.d entry for $NV_PREFIX/lib"
