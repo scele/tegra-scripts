@@ -8,25 +8,50 @@ PACKAGE=linux
 
 cd_package
 
+if [[ -z "$ARCH" ]]; then
+	ARCH=arm
+fi
+
 run_make_kernel()
 {
-    make -C $TOP/linux ARCH=arm O=$PWD CROSS_COMPILE=$CROSS_COMPILE INSTALL_MOD_PATH=$SYSROOT $*
+    make -C $TOP/linux ARCH=$ARCH O=$PWD CROSS_COMPILE=$CROSS_COMPILE INSTALL_MOD_PATH=$SYSROOT $*
 }
+
+case $ARCH in
+	arm)
+		KCONFIG="tegra_defconfig"
+		KIMAGE=zImage
+	;;
+	arm64)
+		KCONFIG="defconfig"
+		KIMAGE=Image
+	;;
+	*)
+	error "Unknown arch $ARCH"
+	;;
+esac
 
 # Create config is none exists yet
 if [ ! -f $TOP/out/build/$DISTRO/linux/.config ]; then
-    run_make_kernel tegra_defconfig
+    run_make_kernel $KCONFIG
 fi
 
 # Build all that we need
-run_make_kernel -j$NPROC oldconfig dtbs zImage modules
+run_make_kernel -j$NPROC oldconfig dtbs $KIMAGE modules
 
 # Install zImage
-cp $TOP/out/build/$DISTRO/linux/arch/arm/boot/zImage $SYSROOT/boot/zImage-nouveau
+cp $TOP/out/build/$DISTRO/linux/arch/$ARCH/boot/$KIMAGE $SYSROOT/boot/$KIMAGE-nouveau-$ARCH
 
 # Install dtbs
 mkdir -p $SYSROOT/boot/dtb-nouveau
-cp $TOP/out/build/$DISTRO/linux/arch/arm/boot/dts/tegra124-* $SYSROOT/boot/dtb-nouveau
+case $ARCH in
+	arm)
+		cp $TOP/out/build/$DISTRO/linux/arch/arm/boot/dts/tegra124-* $SYSROOT/boot/dtb-nouveau
+	;;
+	arm64)
+		cp $TOP/out/build/$DISTRO/linux/arch/arm64/boot/dts/nvidia/*.dtb $SYSROOT/boot/dtb-nouveau
+	;;
+esac
 
 # Install modules
 run_make_kernel modules_install
@@ -35,7 +60,33 @@ KREL=$(run_make_kernel -s kernelrelease)
 rm -Rf $SYSROOT/lib/modules/$KREL/kernel/drivers/gpu/drm/nouveau
 
 # Generate boot script
-$TOP/tegra-uboot-scripts/gen-uboot-script.py --zimage zImage-nouveau --dtb-dir /boot/dtb-nouveau --cmdline "nouveau.pstate=1 text" -o $SYSROOT/boot/boot-nouveau.scr
+if [ ! "$1" = "-skip-uboot" ]; then
+	status "Writing U-boot script in /boot/boot-nouveau.scr..."
+	cat <<EOF >$SYSROOT/boot/boot-nouveau.scr.txt
+part uuid \${devtype} \${devnum}:\${rootpart} uuid
+if test $cpu = "armv8"; then
+	set _bootcmd "booti"
+	set _kernel "Image"
+	set _karch "arm64"
+else
+	set _bootcmd "bootz"
+	set _kernel "zImage"
+	set _karch "arm"
+fi
+load \${devtype} \${devnum}:\${rootpart} \${kernel_addr_r} /boot/\${_kernel}-nouveau-\${_karch}
+if test -n "\${fdtfile}"; then
+	set _fdt \${fdtfile};
+else
+	set _fdt \${soc}-\${board}\${boardver}.dtb;
+fi
+load \${devtype} \${devnum}:\${rootpart} \${fdt_addr_r} /boot/dtb-nouveau/\${_fdt}
+setenv bootargs console=ttyS0,115200n8 console=tty1 rw rootwait root=PARTUUID=\${uuid} nouveau.pstate=1 text \${extra_bootargs}
+\${_bootcmd} \${kernel_addr_r} - \${fdt_addr_r}
+EOF
+	mkimage -A arm -O linux -T script -C none -a 0 -e 0 -n "Tegra Boot Script" -d $SYSROOT/boot/boot-nouveau.scr.txt $SYSROOT/boot/boot-nouveau.scr
+fi
+
+#$TOP/tegra-uboot-scripts/gen-uboot-script.py --zimage zImage-nouveau-\$\{arch\} --dtb-dir /boot/dtb-nouveau --cmdline "nouveau.pstate=1 text" -o $SYSROOT/boot/boot-nouveau.scr
 ln -sfr $SYSROOT/boot/boot-nouveau.scr $SYSROOT/boot/boot.scr
 
 package_success
