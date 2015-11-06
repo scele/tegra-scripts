@@ -6,13 +6,13 @@ PACKAGE=nouveau
 
 . scripts/env.sh
 
-if [ ! -f $TOP/out/build/$DISTRO/linux/arch/arm/boot/zImage ]; then
+if [ ! -f $BUILDROOT/linux/arch/arm/boot/zImage ]; then
     error "You need to compile the Linux kernel (./scripts/build-linux) before running this script!"
 fi
 
 cd_package
 
-make -j$NPROC ARCH=arm CROSS_COMPILE=$CROSS_COMPILE O=$PWD M=$TOP/nouveau/drm/nouveau -C $TOP/out/build/$DISTRO/linux modules
-make ARCH=arm CROSS_COMPILE=$CROSS_COMPILE O=$PWD M=$TOP/nouveau/drm/nouveau INSTALL_MOD_PATH=$SYSROOT -C $TOP/out/build/$DISTRO/linux modules_install
+make -j$NPROC ARCH=arm CROSS_COMPILE=$CROSS_COMPILE O=$PWD M=$TOP/nouveau/drm/nouveau -C $BUILDROOT/linux modules
+make ARCH=arm CROSS_COMPILE=$CROSS_COMPILE O=$PWD M=$TOP/nouveau/drm/nouveau INSTALL_MOD_PATH=$SYSROOT -C $BUILDROOT/linux modules_install
 
 package_success

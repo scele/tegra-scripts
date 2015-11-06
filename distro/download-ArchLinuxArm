@@ -1,4 +1,12 @@
-f=ArchLinuxARM-armv7-latest.tar.gz
+case $ARCH in
+	arm)
+	f=ArchLinuxARM-armv7-latest.tar.gz
+	;;
+	aarch64)
+	f=ArchLinuxARM-aarch64-generic-latest.tar.gz
+	;;
+esac
+
 outfile=$TOP/out/$f
 root=$SYSROOT
 

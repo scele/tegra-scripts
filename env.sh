@@ -4,6 +4,10 @@ if [[ -z "$DISTRO" ]]; then
     DISTRO=ArchLinuxArm
 fi
 
+if [[ -z "$ARCH" ]]; then
+	ARCH=arm
+fi
+
 # Where all the programs/libraries from these scripts will be installed
 if [[ -z "$NV_PREFIX" ]]; then
     NV_PREFIX=/opt/nouveau
@@ -33,8 +37,8 @@ cd_package()
         exit 1
     fi
 
-    mkdir -p $TOP/out/build/$DISTRO/$PACKAGE
-    cd $TOP/out/build/$DISTRO/$PACKAGE
+    mkdir -p $BUILDROOT/$PACKAGE
+    cd $BUILDROOT/$PACKAGE
 }
 
 package_success()
@@ -49,7 +53,7 @@ run_autogen()
         exit 1
     fi
 
-    if [ ! -f "$TOP/out/build/$DISTRO/$PACKAGE/Makefile" ]; then
+    if [ ! -f "$BUILDROOT/$PACKAGE/Makefile" ]; then
         $TOP/$PACKAGE/autogen.sh --host=${CROSS_COMPILE%"-"} --prefix=$NV_PREFIX --with-sysroot=$SYSROOT $*
     fi
 }
@@ -62,17 +66,28 @@ run_make()
 
 NPROC=$(nproc)
 
+BUILDROOT=$TOP/out/build/$ARCH/$DISTRO
+
 #### toolchain-specific settings
-CROSS_COMPILE=arm-linux-gnueabihf-
 LINARO_GCC_VERSION=4.8
-LINARO_GCC_RELEASE=14.04
-LINARO_GCC_PACKAGE=gcc-linaro-arm-linux-gnueabihf-${LINARO_GCC_VERSION}-20${LINARO_GCC_RELEASE}_linux
+LINARO_GCC_RELEASE=15.06
+case $ARCH in
+	arm)
+	LINARO_GCC_VARIANT=arm-linux-gnueabihf
+	;;
+	aarch64)
+	LINARO_GCC_VARIANT=aarch64-linux-gnu
+	;;
+esac
+LINARO_GCC_PACKAGE=gcc-linaro-${LINARO_GCC_VERSION}-2015.06-x86_64_${LINARO_GCC_VARIANT}
+CROSS_COMPILE=${LINARO_GCC_VARIANT}-
+
 SYSTEM_PATH="$PATH"
 PATH="$TOP/$LINARO_GCC_PACKAGE/bin:$PATH"
 ####
 
 #### user-space only flags!
-export SYSROOT="$TOP/out/target/$DISTRO"
+export SYSROOT="$TOP/out/target/$ARCH/$DISTRO"
 export CFLAGS="--sysroot=$SYSROOT"
 export CXXFLAGS="$CFLAGS"
 

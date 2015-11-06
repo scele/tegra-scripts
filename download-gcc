@@ -7,7 +7,15 @@ set -e
 f=$LINARO_GCC_PACKAGE.tar.xz
 mkdir -p $TOP/out
 outfile=$TOP/out/$f
-url="https://releases.linaro.org/${LINARO_GCC_RELEASE}/components/toolchain/binaries/$f"
+url="https://releases.linaro.org/${LINARO_GCC_RELEASE}/components/toolchain/binaries/${LINARO_GCC_VERSION}/${LINARO_GCC_VARIANT}/$f"
+case $ARCH in
+	arm)
+	;;
+	aarch64)
+	url="https://releases.linaro.org/${LINARO_GCC_RELEASE}/components/toolchain/binaries/${LINARO_GCC_VERSION}/${ARCH}-linux-gnu/$f"
+	;;
+esac
+
 
 if [ ! -e "$TOP/$LINARO_GCC_PACKAGE" ]; then
     if [ ! -f "$outfile" ]; then
