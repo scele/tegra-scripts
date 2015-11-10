@@ -19,5 +19,5 @@ fi
 if [ ! -e "$root" ]; then
     status "Extracting rootfs..."
     mkdir -p $root
-    sudo tar xpf $outfile -C $root || { sudo rm $root -Rf; exit 1; }
+    sudo -s -- tar xpf $outfile -C $root || { rm $root -Rf; exit 1; }
 fi

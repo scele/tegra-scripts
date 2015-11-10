@@ -41,13 +41,9 @@ mesa-demos
 "
 
 status "Using qemu to install required packages on target FS..."
-sudo mount -t proc proc $SYSROOT/proc
-run_in_qemu mount --rbind / /
 run_in_qemu pacman -Syu --needed --noconfirm $ARCH_PACKAGES
-sudo umount $SYSROOT/proc
-sudo umount $SYSROOT
 
-status "Fixing symlinks in target FS' /usr/lib..."
+status "Fixing symlinks in target FS' /usr/lib/..."
 LINKS=$(find $SYSROOT/usr/lib -type l)
 for LINK in $LINKS; do
     L=$(readlink $LINK)
@@ -55,10 +51,9 @@ for LINK in $LINKS; do
         R=$(dirname $LINK)
         RL=$(realpath -m --relative-to ${R#"$SYSROOT"} $L)
         echo Linking $LINK to $RL
-        sudo ln -sf $RL $LINK
+        ln -sf $RL $LINK
     fi
 done
 
-status "Updating X server path in /etc..."
-sudo find $SYSROOT/etc -type f -exec sed -i 's/\/usr\/bin\/X\b/\/opt\/nouveau\/bin\/X/g' {} +
-
+status "Updating X server path in /etc/X11..."
+find $SYSROOT/etc/X11 -type f -exec sed -i 's/\/usr\/bin\/X\b/\/opt\/nouveau\/bin\/X/g' {} +

@@ -29,6 +29,15 @@ if [ ! -e "$TOP/out/host/$LINARO_GCC_PACKAGE" ]; then
     rm $outfile
 fi
 
+if [ ! -f "$TOP/out/host/qemu/qemu-$ARCH-static" ]; then
+    status "Downloading qemu-$ARCH-static binary..."
+    mkdir -p $TOP/out/host/qemu
+    QEMUDEB=$(mktemp)
+    wget http://snapshot.debian.org/archive/debian/20141030T220503Z/pool/main/q/qemu/qemu-user-static_2.1%2Bdfsg-5%2Bb1_i386.deb -O $QEMUDEB
+    ${CROSS_COMPILE}ar p $QEMUDEB data.tar.xz|tar xJf - -C $TOP/out/host/qemu --strip-components=3 ./usr/bin/qemu-$ARCH-static
+    rm -f $QEMUDEB
+fi
+
 # Now cross compile a few tools that we will need locally...
 unset CFLAGS CXXFLAGS CROSS_COMPILE SYSROOT PKG_CONFIG_DIR PKG_CONFIG_LIBDIR PKG_CONFIG_SYSROOT_DIR PKG_CONFIG_PATH PKG_CONFIG
 export PATH="$SYSTEM_PATH"
