@@ -91,6 +91,7 @@ export SYSROOT="$TOP/out/target/$ARCH/$DISTRO"
 export CFLAGS="--sysroot=$SYSROOT"
 export CXXFLAGS="$CFLAGS"
 
+export ACLOCAL_PATH="${SYSROOT}/usr/share/aclocal"
 export PKG_CONFIG_DIR=
 export PKG_CONFIG_LIBDIR="${SYSROOT}/usr/lib/arm-linux-gnueabihf/pkgconfig":"${SYSROOT}/usr/lib/pkgconfig":"${SYSROOT}/usr/share/pkgconfig"
 export PKG_CONFIG_SYSROOT_DIR="${SYSROOT}"
