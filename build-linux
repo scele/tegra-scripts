@@ -62,7 +62,7 @@ if [ ! "$1" = "-skip-uboot" ]; then
 	status "Writing U-boot script in /boot/boot-nouveau.scr..."
 	cat <<EOF >$SYSROOT/boot/boot-nouveau.scr.txt
 part uuid \${devtype} \${devnum}:\${rootpart} uuid
-if test $cpu = "armv8"; then
+if test \$cpu = "armv8"; then
 	set _bootcmd "booti"
 	set _kernel "Image"
 	set _karch "arm64"
@@ -84,7 +84,6 @@ EOF
 	mkimage -A arm -O linux -T script -C none -a 0 -e 0 -n "Tegra Boot Script" -d $SYSROOT/boot/boot-nouveau.scr.txt $SYSROOT/boot/boot-nouveau.scr
 fi
 
-#$TOP/tegra-uboot-scripts/gen-uboot-script.py --zimage zImage-nouveau-\$\{arch\} --dtb-dir /boot/dtb-nouveau --cmdline "nouveau.pstate=1 text" -o $SYSROOT/boot/boot-nouveau.scr
 ln -sfr $SYSROOT/boot/boot-nouveau.scr $SYSROOT/boot/boot.scr
 
 package_success
