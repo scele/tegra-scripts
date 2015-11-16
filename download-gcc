@@ -4,9 +4,10 @@ set -e
 
 . scripts/env.sh
 
+mkdir -p $TOP/out/host
+
 f=$LINARO_GCC_PACKAGE.tar.xz
-mkdir -p $TOP/out
-outfile=$TOP/out/$f
+outfile=$TOP/out/host/$f
 url="https://releases.linaro.org/${LINARO_GCC_RELEASE}/components/toolchain/binaries/${LINARO_GCC_VERSION}/${LINARO_GCC_VARIANT}/$f"
 case $ARCH in
 	arm)
@@ -17,14 +18,14 @@ case $ARCH in
 esac
 
 
-if [ ! -e "$TOP/$LINARO_GCC_PACKAGE" ]; then
+if [ ! -e "$TOP/out/host/$LINARO_GCC_PACKAGE" ]; then
     if [ ! -f "$outfile" ]; then
         status "Downloading $url..."
         wget $url -O $outfile || { rm $outfile; exit 1; }
     fi
     status "Extracting..."
     mkdir -p $TOP
-    tar xJf $outfile -C $TOP
+    tar xJf $outfile -C $TOP/out/host
     rm $outfile
 fi
 
@@ -34,7 +35,7 @@ export PATH="$SYSTEM_PATH"
 
 # pkg-config
 PKG_CONFIG_VERSION=0.28
-outfile=$TOP/out/pkg-config-$PKG_CONFIG_VERSION.tar.gz
+outfile=$TOP/out/host/pkg-config-$PKG_CONFIG_VERSION.tar.gz
 url=http://pkgconfig.freedesktop.org/releases/pkg-config-$PKG_CONFIG_VERSION.tar.gz
 if [ ! -f "$outfile" ]; then
     status "Downloading $url"
@@ -45,19 +46,19 @@ if [ ! -e "$TOP/pkg-config-$PKG_CONFIG_VERSION" ]; then
     tar xfz $outfile -C $TOP
 fi
 
-if [ ! -f "$TOP/$LINARO_GCC_PACKAGE/bin/pkg-config" ]; then
+if [ ! -f "$TOP/out/host/$LINARO_GCC_PACKAGE/bin/pkg-config" ]; then
     cd $TOP/pkg-config-$PKG_CONFIG_VERSION
     ./configure && make
-    cp $TOP/pkg-config-$PKG_CONFIG_VERSION/pkg-config $TOP/$LINARO_GCC_PACKAGE/bin
+    cp $TOP/pkg-config-$PKG_CONFIG_VERSION/pkg-config $TOP/out/host/$LINARO_GCC_PACKAGE/bin
 fi
 
 # wayland-scanner
-if [ ! -f "$TOP/$LINARO_GCC_PACKAGE/bin/wayland-scanner" ]; then
+if [ ! -f "$TOP/out/host/$LINARO_GCC_PACKAGE/bin/wayland-scanner" ]; then
     mkdir -p $TOP/out/build/wayland-scanner
     cd $TOP/out/build/wayland-scanner
     $TOP/wayland/autogen.sh --disable-documentation
     make wayland-scanner
-    cp wayland-scanner $TOP/$LINARO_GCC_PACKAGE/bin
+    cp wayland-scanner $TOP/out/host/$LINARO_GCC_PACKAGE/bin
 fi
 
 status "Cross-compilation toolchain successfully downloaded"
