@@ -2,7 +2,7 @@
 
 set -e
 
-PACKAGE=linux-firmware
+PACKAGE=linux-firmware.git
 
 . scripts/env.sh
 
