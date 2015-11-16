@@ -1,12 +1,22 @@
 set -e
 
+if [[ -z "$TOP" ]]; then
+    error "Error: TOP env var not set."
+    exit 1
+fi
+
 if [[ -z "$DISTRO" ]]; then
     DISTRO=ArchLinuxArm
 fi
 
-if [[ -z "$ARCH" ]]; then
+case $(basename $(readlink -f $TOP/.repo/manifest.xml)) in
+tegra-nouveau-arm64.xml)
+	ARCH=aarch64
+	;;
+*)
 	ARCH=arm
-fi
+	;;
+esac
 
 # Where all the programs/libraries from these scripts will be installed
 if [[ -z "$NV_PREFIX" ]]; then
@@ -23,11 +33,6 @@ error()
     echo -e "\e[91m"$*"\e[0m "
     exit 1
 }
-
-if [[ -z "$TOP" ]]; then
-    error "Error: TOP env var not set."
-    exit 1
-fi
 
 #### helpers
 cd_package()
