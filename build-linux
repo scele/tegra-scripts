@@ -78,7 +78,7 @@ else
 	set _fdt \${soc}-\${board}\${boardver}.dtb;
 fi
 load \${devtype} \${devnum}:\${rootpart} \${fdt_addr_r} /boot/dtb-nouveau/\${_fdt}
-setenv bootargs console=ttyS0,115200n8 console=tty1 rw rootwait root=PARTUUID=\${uuid} nouveau.pstate=1 text \${extra_bootargs}
+setenv bootargs console=ttyS0,115200n8 console=tty1 rw rootwait root=PARTUUID=\${uuid} nouveau.pstate=1 cma=128M text \${extra_bootargs}
 \${_bootcmd} \${kernel_addr_r} - \${fdt_addr_r}
 EOF
 	mkimage -A arm -O linux -T script -C none -a 0 -e 0 -n "Tegra Boot Script" -d $SYSROOT/boot/boot-nouveau.scr.txt $SYSROOT/boot/boot-nouveau.scr
