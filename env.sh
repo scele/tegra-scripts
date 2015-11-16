@@ -1,5 +1,16 @@
 set -e
 
+status()
+{
+    echo -e "\e[1m"$*"\e[0m "
+}
+
+error()
+{
+    echo -e "\e[91m"$*"\e[0m "
+    exit 1
+}
+
 if [[ -z "$TOP" ]]; then
     error "Error: TOP env var not set."
     exit 1
@@ -22,17 +33,6 @@ esac
 if [[ -z "$NV_PREFIX" ]]; then
     NV_PREFIX=/opt/nouveau
 fi
-
-status()
-{
-    echo -e "\e[1m"$*"\e[0m "
-}
-
-error()
-{
-    echo -e "\e[91m"$*"\e[0m "
-    exit 1
-}
 
 #### helpers
 cd_package()
