@@ -38,7 +38,7 @@ fi
 run_make_kernel -j$NPROC oldconfig dtbs $KIMAGE modules
 
 # Install zImage
-cp $BUILDROOT/linux/arch/$ARCH/boot/$KIMAGE $SYSROOT/boot/$KIMAGE-nouveau-$KARCH
+cp $BUILDROOT/linux/arch/$KARCH/boot/$KIMAGE $SYSROOT/boot/$KIMAGE-nouveau-$KARCH
 
 # Install dtbs
 mkdir -p $SYSROOT/boot/dtb-nouveau

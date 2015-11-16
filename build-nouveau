@@ -6,13 +6,27 @@ PACKAGE=nouveau
 
 . scripts/env.sh
 
-if [ ! -f $BUILDROOT/linux/arch/arm/boot/zImage ]; then
+case $ARCH in
+	arm)
+		KIMAGE=zImage
+		KARCH=arm
+	;;
+	aarch64)
+		KIMAGE=Image
+		KARCH=arm64
+	;;
+	*)
+	error "Unknown arch $ARCH"
+	;;
+esac
+
+if [ ! -f $BUILDROOT/linux/arch/$KARCH/boot/$KIMAGE ]; then
     error "You need to compile the Linux kernel (./scripts/build-linux) before running this script!"
 fi
 
 cd_package
 
-make -j$NPROC ARCH=arm CROSS_COMPILE=$CROSS_COMPILE O=$PWD M=$TOP/nouveau/drm/nouveau -C $BUILDROOT/linux modules
-make ARCH=arm CROSS_COMPILE=$CROSS_COMPILE O=$PWD M=$TOP/nouveau/drm/nouveau INSTALL_MOD_PATH=$SYSROOT -C $BUILDROOT/linux modules_install
+make -j$NPROC ARCH=$KARCH CROSS_COMPILE=$CROSS_COMPILE O=$PWD M=$TOP/nouveau/drm/nouveau -C $BUILDROOT/linux modules
+make ARCH=$KARCH CROSS_COMPILE=$CROSS_COMPILE O=$PWD M=$TOP/nouveau/drm/nouveau INSTALL_MOD_PATH=$SYSROOT -C $BUILDROOT/linux modules_install
 
 package_success
