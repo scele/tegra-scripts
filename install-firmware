@@ -8,6 +8,10 @@ PACKAGE=linux-firmware.git
 
 cd_package
 
-cp -R $TOP/$PACKAGE/nvidia $SYSROOT/lib/firmware/
+case $ARCH in
+	aarch64)
+		cp -R $TOP/$PACKAGE/nvidia $SYSROOT/lib/firmware/
+	;;
+esac
 
 package_success
