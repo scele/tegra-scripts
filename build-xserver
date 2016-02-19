@@ -34,7 +34,7 @@ run_make
 run_make install
 
 mkdir -p $SYSROOT/$NV_PREFIX/etc/X11/xorg.conf.d
-cp $TOP/$PACKAGE/conf/99-libinput.conf $SYSROOT/$NV_PREFIX/etc/X11/xorg.conf.d
+cp $TOP/$PACKAGE/conf/* $SYSROOT/$NV_PREFIX/etc/X11/xorg.conf.d
 
 package_success
 cd $TOP
