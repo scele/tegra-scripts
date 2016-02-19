@@ -3,7 +3,7 @@ case $ARCH in
 	f=ArchLinuxARM-armv7-latest.tar.gz
 	;;
 	aarch64)
-	f=ArchLinuxARM-aarch64-generic-latest.tar.gz
+	f=ArchLinuxARM-aarch64-latest.tar.gz
 	;;
 esac
 
@@ -12,7 +12,7 @@ root=$SYSROOT
 
 if [ ! -f "$outfile" ]; then
     status "Downloading rootfs..."
-    wget http://os.archlinuxarm.org/os/$f -O $outfile || { rm $outfile; exit 1; }
+    wget http://archlinuxarm.org/os/$f -O $outfile || { rm $outfile; exit 1; }
 fi
 
 # Do not overwrite or remove existing rootfs. The user might have copied or linked an already existing rootfs there.
