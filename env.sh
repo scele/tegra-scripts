@@ -20,12 +20,18 @@ if [[ -z "$DISTRO" ]]; then
     DISTRO=ArchLinuxArm
 fi
 
-case $(basename $(readlink -f $TOP/.repo/manifest.xml)) in
-tegra-nouveau-arm64.xml)
-	ARCH=aarch64
+if [[ -z "$ARCH" ]]; then
+	ARCH=arm
+fi
+
+case $ARCH in
+arm)
+	;;
+aarch64)
 	;;
 *)
-	ARCH=arm
+	error "Invalid ARCH $ARCH (valid values: arm, aarch64)"
+	exit 1
 	;;
 esac
 
