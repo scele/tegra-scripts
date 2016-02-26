@@ -37,9 +37,7 @@ terminus-font
 ttf-dejavu
 ttf-oxygen
 xterm
-lxde
 mesa-demos
-kmscon
 "
 
 status "Using qemu to install required packages on target FS..."
