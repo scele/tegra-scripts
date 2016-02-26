@@ -30,7 +30,7 @@ case $ARCH in
 esac
 
 # Create config is none exists yet
-if [ ! -f $BUILDROOT/linux/.config ]; then
+if [ ! -f $PWD/.config ]; then
     run_make_kernel $KCONFIG
 fi
 
