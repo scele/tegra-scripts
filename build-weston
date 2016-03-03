@@ -12,8 +12,7 @@ mkdir -p m4
 run_autogen \
 --disable-rpi-compositor \
 --enable-demo-clients-install \
---disable-wcap-tools \
-$WESTON_CONFIG_DISTRO_OPTIONS
+--disable-wcap-tools
 
 run_make
 # Use fakeroot since a weston-launch is attempted to be root suid
