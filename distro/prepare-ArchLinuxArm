@@ -37,6 +37,7 @@ terminus-font
 noto-fonts
 xterm
 mesa-demos
+libepoxy
 "
 
 status "Using qemu to install required packages on target FS..."
