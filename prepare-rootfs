@@ -7,7 +7,7 @@ set -e
 # Run a command into the chrooted target FS using qemu and proot
 run_in_qemu()
 {
-    proot -S $SYSROOT -q $TOP/out/host/qemu/qemu-$ARCH-static $*
+    proot -0 -r $SYSROOT -q $TOP/out/host/qemu/qemu-$ARCH-static -b /etc/resolv.conf -b /etc/mtab $*
 }
 
 if [ ! -e $SYSROOT ]; then
