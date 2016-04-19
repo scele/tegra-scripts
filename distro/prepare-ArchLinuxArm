@@ -16,6 +16,7 @@ libdrm
 cairo
 mtdev
 wayland
+wayland-protocols
 xcmiscproto
 xtrans
 bigreqsproto
