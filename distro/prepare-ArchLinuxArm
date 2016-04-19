@@ -44,7 +44,7 @@ status "Using qemu to install required packages on target FS..."
 run_in_qemu pacman -Syu --needed --noconfirm $ARCH_PACKAGES
 
 status "Fixing symlinks in target FS' /usr/lib/..."
-LINKS=$(find $SYSROOT/usr/lib -type l)
+LINKS=$(find $SYSROOT/usr/lib -type l -not -path "*/usr/lib/modules/*")
 for LINK in $LINKS; do
     L=$(readlink $LINK)
     if [[ "$L" = /* ]]; then
