@@ -34,8 +34,7 @@ xorg-fonts
 xorg-fonts-misc
 xorg-xsetroot
 terminus-font
-ttf-dejavu
-ttf-oxygen
+noto-fonts
 xterm
 mesa-demos
 "
