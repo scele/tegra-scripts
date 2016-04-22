@@ -52,9 +52,8 @@ for LINK in $LINKS; do
     if [[ "$L" = /* ]]; then
         R=$(dirname $LINK)
 	ABS="${SYSROOT}${L}"
-        RL=$(realpath -s --relative-to $R $ABS)
-        echo Linking $LINK to $RL
-        ln -sf $RL $LINK
+        echo Fixing $LINK...
+        ln -sfr $ABS $LINK
     fi
 done
 
