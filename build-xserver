@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+
+set -e
+
+PACKAGE=xserver
+
+. scripts/env.sh
+
+cd_package
+
+run_autogen \
+--enable-glamor \
+--enable-dri2 \
+--enable-dri3 \
+--enable-xwayland \
+--enable-config-udev
+
+run_make
+run_make install
+
+package_success
+cd $TOP
+
+
+PACKAGE=xf86-input-libinput
+
+. scripts/env.sh
+
+cd_package
+
+run_autogen
+
+run_make
+run_make install
+
+mkdir -p $SYSROOT/$NV_PREFIX/etc/X11/xorg.conf.d
+cp $TOP/$PACKAGE/conf/* $SYSROOT/$NV_PREFIX/etc/X11/xorg.conf.d
+
+package_success
+cd $TOP
+
+
+PACKAGE=xkeyboard-config
+
+. scripts/env.sh
+
+cd_package
+
+run_autogen
+
+run_make
+run_make install
+
+package_success
+cd $TOP
+
+
+PACKAGE=xkbcomp
+
+. scripts/env.sh
+
+cd_package
+
+run_autogen
+
+run_make
+run_make install
+
+package_success
+cd $TOP
+

@@ -1,19 +1,17 @@
 #!/usr/bin/env bash
 
-if [[ -z "$TOP" ]]; then
-    echo "Error: TOP env var not set."
-    exit 1
-fi
+set -e
 
-if [[ -z "$BOARD_ROOT" ]]; then
-    echo "Error: BOARD_ROOT env var not set."
-    exit 1
-fi
+PACKAGE=linux-firmware
 
-if ! mountpoint -q $BOARD_ROOT; then
-    echo "Error: $BOARD_ROOT not mounted."
-    exit 1
-fi
+. scripts/env.sh
 
-sudo mkdir -p $BOARD_ROOT/lib/firmware/nouveau
-sudo cp $TOP/firmware/* $BOARD_ROOT/lib/firmware/nouveau
+cd_package
+
+case $ARCH in
+	aarch64)
+		cp -R $TOP/$PACKAGE/nvidia $SYSROOT/lib/firmware/
+	;;
+esac
+
+package_success

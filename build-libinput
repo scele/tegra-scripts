@@ -2,7 +2,7 @@
 
 set -e
 
-PACKAGE=pthread-stubs
+PACKAGE=libinput
 
 . scripts/env.sh
 

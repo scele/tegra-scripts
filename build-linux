@@ -8,13 +8,84 @@ PACKAGE=linux
 
 cd_package
 
-make -j$NPROC -C $TOP/linux ARCH=arm O=$PWD CROSS_COMPILE=$CROSS_COMPILE tegra_defconfig dtbs zImage modules
-sudo cp $TOP/out/build/linux/arch/arm/boot/zImage $SYSROOT/boot/zImage-upstream
-sudo ln -sfr $SYSROOT/boot/zImage-upstream $SYSROOT/boot/zImage
-sudo mkdir -p $SYSROOT/boot/dtb-upstream
-sudo cp $TOP/out/build/linux/arch/arm/boot/dts/tegra124-* $SYSROOT/boot/dtb-upstream/
-sudo make -C $TOP/linux ARCH=arm O=$PWD CROSS_COMPILE=$CROSS_COMPILE INSTALL_MOD_PATH=$SYSROOT modules_install
-sudo $TOP/tegra-uboot-scripts/gen-uboot-script.py --dtb-dir /boot/dtb-upstream --cmdline "cma=256M nouveau.pstate=1 text" -o $SYSROOT/boot/boot-upstream.scr
-sudo ln -sfr $SYSROOT/boot/boot-upstream.scr $SYSROOT/boot/boot.scr
+run_make_kernel()
+{
+    make -C $TOP/linux ARCH=$KARCH O=$PWD CROSS_COMPILE=$CROSS_COMPILE INSTALL_MOD_PATH=$SYSROOT $*
+}
+
+case $ARCH in
+	arm)
+		KCONFIG="tegra_defconfig"
+		KIMAGE=zImage
+		KARCH=arm
+	;;
+	aarch64)
+		KCONFIG="defconfig"
+		KIMAGE=Image
+		KARCH=arm64
+	;;
+	*)
+	error "Unknown arch $ARCH"
+	;;
+esac
+
+# Create config is none exists yet
+if [ ! -f $PWD/.config ]; then
+    run_make_kernel $KCONFIG
+fi
+
+# Build all that we need
+run_make_kernel -j$NPROC oldconfig dtbs $KIMAGE modules
+
+# Install zImage
+cp $BUILDROOT/linux/arch/$KARCH/boot/$KIMAGE $SYSROOT/boot/$KIMAGE-nouveau-$KARCH
+
+# Install dtbs
+mkdir -p $SYSROOT/boot/dtb-nouveau
+case $ARCH in
+	arm)
+		cp $BUILDROOT/linux/arch/arm/boot/dts/tegra124-* $SYSROOT/boot/dtb-nouveau
+	;;
+	aarch64)
+		cp $BUILDROOT/linux/arch/arm64/boot/dts/nvidia/*.dtb $SYSROOT/boot/dtb-nouveau
+	;;
+esac
+
+# Install modules
+run_make_kernel modules_install
+# Remove nouveau modules (we want to use the ones from the nouveau repository)
+KREL=$(run_make_kernel -s kernelrelease)
+rm -Rf $SYSROOT/lib/modules/$KREL/kernel/drivers/gpu/drm/nouveau
+
+# Generate boot script
+if [ ! "$1" = "-skip-uboot" ]; then
+	status "Writing U-boot script in /boot/boot-nouveau.scr..."
+	cat <<EOF >$SYSROOT/boot/boot-nouveau.scr.txt
+part uuid \${devtype} \${devnum}:\${rootpart} uuid
+if test \$cpu = "armv8"; then
+	set _bootcmd "booti"
+	set _kernel "Image"
+	set _karch "arm64"
+else
+	set _bootcmd "bootz"
+	set _kernel "zImage"
+	set _karch "arm"
+fi
+load \${devtype} \${devnum}:\${rootpart} \${kernel_addr_r} /boot/\${_kernel}-nouveau-\${_karch}
+if test -n "\${fdtfile}"; then
+	set _fdt \${fdtfile};
+else
+	set _fdt \${soc}-\${board}\${boardver}.dtb;
+fi
+load \${devtype} \${devnum}:\${rootpart} \${fdt_addr_r} /boot/dtb-nouveau/\${_fdt}
+setenv bootargs console=ttyS0,115200n8 console=tty1 rw rootwait root=PARTUUID=\${uuid} text \${extra_bootargs}
+# Required for the L4T bootloader
+set fdt_copy_node_names
+\${_bootcmd} \${kernel_addr_r} - \${fdt_addr_r}
+EOF
+	mkimage -A arm -O linux -T script -C none -a 0 -e 0 -n "Tegra Boot Script" -d $SYSROOT/boot/boot-nouveau.scr.txt $SYSROOT/boot/boot-nouveau.scr
+fi
+
+ln -sfr $SYSROOT/boot/boot-nouveau.scr $SYSROOT/boot/boot.scr
 
 package_success

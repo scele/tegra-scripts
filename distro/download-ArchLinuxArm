@@ -1,0 +1,23 @@
+case $ARCH in
+	arm)
+	f=ArchLinuxARM-armv7-latest.tar.gz
+	;;
+	aarch64)
+	f=ArchLinuxARM-aarch64-latest.tar.gz
+	;;
+esac
+
+outfile=$TOP/out/$f
+root=$SYSROOT
+
+if [ ! -f "$outfile" ]; then
+    status "Downloading rootfs..."
+    wget http://archlinuxarm.org/os/$f -O $outfile || { rm $outfile; exit 1; }
+fi
+
+# Do not overwrite or remove existing rootfs. The user might have copied or linked an already existing rootfs there.
+if [ ! -e "$root" ]; then
+    status "Extracting rootfs..."
+    mkdir -p $root
+    sudo -s -- tar xpf $outfile -C $root || { rm $root -Rf; exit 1; }
+fi

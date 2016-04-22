@@ -8,18 +8,22 @@ PACKAGE=mesa
 
 cd_package
 
-run_autogen --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT \
+run_autogen \
 --without-dri-drivers \
 --with-gallium-drivers=nouveau \
---enable-gallium-egl \
 --enable-gbm \
 --enable-egl \
---with-egl-platforms=drm,wayland \
+--with-egl-platforms=drm,x11,wayland \
 --enable-gles1 \
 --enable-gles2 \
---enable-opengl
+--enable-opengl \
+--enable-osmesa \
+--enable-shared-glapi \
+--enable-dri3 \
+--enable-glx \
+--enable-glx-tls
 
-make -j$NPROC
-make DESTDIR=$SYSROOT install
+run_make
+run_make install
 
 package_success

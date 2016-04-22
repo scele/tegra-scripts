@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-. scripts/env.sh
-
-cd $TOP/out/Linux_for_Tegra
-sudo ./flash.sh -R $TOP/out/root -S 8GiB jetson-tk1 mmcblk0p1

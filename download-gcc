@@ -4,15 +4,70 @@ set -e
 
 . scripts/env.sh
 
-f=$LINARO_GCC_PACKAGE.tar.xz
-mkdir -p $TOP/out
-outfile=$TOP/out/$f
-url="https://releases.linaro.org/${LINARO_GCC_RELEASE}/components/toolchain/binaries/$f"
-status "Downloading $url..."
-curl $url -o $outfile
+mkdir -p $TOP/out/host
 
-status "Extracting..."
-mkdir -p $TOP
-tar xJf $outfile -C $TOP
-rm $outfile
+f=$LINARO_GCC_PACKAGE.tar.xz
+outfile=$TOP/out/host/$f
+url="https://releases.linaro.org/${LINARO_GCC_RELEASE}/components/toolchain/binaries/${LINARO_GCC_VERSION}/${LINARO_GCC_VARIANT}/$f"
+case $ARCH in
+	arm)
+	;;
+	aarch64)
+	url="https://releases.linaro.org/${LINARO_GCC_RELEASE}/components/toolchain/binaries/${LINARO_GCC_VERSION}/${ARCH}-linux-gnu/$f"
+	;;
+esac
+
+
+if [ ! -e "$TOP/out/host/$LINARO_GCC_PACKAGE" ]; then
+    if [ ! -f "$outfile" ]; then
+        status "Downloading $url..."
+        wget $url -O $outfile || { rm $outfile; exit 1; }
+    fi
+    status "Extracting..."
+    mkdir -p $TOP
+    tar xJf $outfile -C $TOP/out/host
+    rm $outfile
+fi
+
+if [ ! -f "$TOP/out/host/qemu/qemu-$ARCH-static" ]; then
+    status "Downloading qemu-$ARCH-static binary..."
+    mkdir -p $TOP/out/host/qemu
+    QEMUDEB=$(mktemp)
+    wget http://snapshot.debian.org/archive/debian/20141030T220503Z/pool/main/q/qemu/qemu-user-static_2.1%2Bdfsg-5%2Bb1_i386.deb -O $QEMUDEB
+    ${CROSS_COMPILE}ar p $QEMUDEB data.tar.xz|tar xJf - -C $TOP/out/host/qemu --strip-components=3 ./usr/bin/qemu-$ARCH-static
+    rm -f $QEMUDEB
+fi
+
+# Now cross compile a few tools that we will need locally...
+unset CFLAGS CXXFLAGS CROSS_COMPILE SYSROOT PKG_CONFIG_DIR PKG_CONFIG_LIBDIR PKG_CONFIG_SYSROOT_DIR PKG_CONFIG_PATH PKG_CONFIG
+export PATH="$SYSTEM_PATH"
+
+# pkg-config
+PKG_CONFIG_VERSION=0.28
+outfile=$TOP/out/host/pkg-config-$PKG_CONFIG_VERSION.tar.gz
+url=http://pkgconfig.freedesktop.org/releases/pkg-config-$PKG_CONFIG_VERSION.tar.gz
+if [ ! -f "$outfile" ]; then
+    status "Downloading $url"
+    wget $url -O $outfile || { rm $outfile; exit 1; }
+fi
+
+if [ ! -e "$TOP/pkg-config-$PKG_CONFIG_VERSION" ]; then
+    tar xfz $outfile -C $TOP
+fi
+
+if [ ! -f "$TOP/out/host/$LINARO_GCC_PACKAGE/bin/pkg-config" ]; then
+    cd $TOP/pkg-config-$PKG_CONFIG_VERSION
+    ./configure && make
+    cp $TOP/pkg-config-$PKG_CONFIG_VERSION/pkg-config $TOP/out/host/$LINARO_GCC_PACKAGE/bin
+fi
+
+# wayland-scanner
+if [ ! -f "$TOP/out/host/$LINARO_GCC_PACKAGE/bin/wayland-scanner" ]; then
+    mkdir -p $TOP/out/build/wayland-scanner
+    cd $TOP/out/build/wayland-scanner
+    $TOP/wayland/autogen.sh --disable-documentation
+    make wayland-scanner
+    cp wayland-scanner $TOP/out/host/$LINARO_GCC_PACKAGE/bin
+fi
+
 status "Cross-compilation toolchain successfully downloaded"

@@ -1,0 +1,61 @@
+ARCH_PACKAGES="
+glproto
+dri2proto
+dri3proto
+presentproto
+libxext
+libxcb
+libxdamage
+libxfixes
+libxshmfence
+libxcursor
+libxkbcommon-x11
+libjpeg-turbo
+libinput
+libdrm
+cairo
+mtdev
+wayland
+wayland-protocols
+xcmiscproto
+xtrans
+bigreqsproto
+randrproto
+inputproto
+videoproto
+compositeproto
+recordproto
+scrnsaverproto
+resourceproto
+xf86driproto
+xineramaproto
+xcb-util-keysyms
+xorg-xinit
+xorg-fonts
+xorg-fonts-misc
+xorg-xsetroot
+terminus-font
+ttf-dejavu
+noto-fonts
+xterm
+mesa-demos
+libepoxy
+"
+
+status "Using qemu to install required packages on target FS..."
+run_in_qemu pacman -Syu --needed --noconfirm $ARCH_PACKAGES
+
+status "Fixing symlinks in target FS' /usr/lib/..."
+LINKS=$(find $SYSROOT/usr/lib -type l -not -path "*/usr/lib/modules/*")
+for LINK in $LINKS; do
+    L=$(readlink $LINK)
+    if [[ "$L" = /* ]]; then
+        R=$(dirname $LINK)
+	ABS="${SYSROOT}${L}"
+        echo Fixing $LINK...
+        ln -sfr $ABS $LINK
+    fi
+done
+
+status "Updating X server path in /etc/X11..."
+find $SYSROOT/etc/X11 -type f -exec sed -i 's/\/usr\/bin\/X\b/\/opt\/nouveau\/bin\/X/g' {} +

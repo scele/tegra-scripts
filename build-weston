@@ -9,17 +9,18 @@ PACKAGE=weston
 cd_package
 
 mkdir -p m4
-run_autogen --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT \
---disable-x11-compositor \
+run_autogen \
 --disable-rpi-compositor \
---enable-demo-clients-install
+--enable-demo-clients-install \
+--disable-wcap-tools
 
-make -j$NPROC
+run_make
 # Use fakeroot since a weston-launch is attempted to be root suid
 fakeroot make DESTDIR=$SYSROOT install
-
 # Fix permissions of weston-launch which was installed using fakeroot
-sudo chown root $SYSROOT/$PREFIX/bin/weston-launch
-sudo chmod u+s $SYSROOT/$PREFIX/bin/weston-launch
+sudo -s -- <<EOF
+chown root $SYSROOT/$NV_PREFIX/bin/weston-launch
+chmod u+s $SYSROOT/$NV_PREFIX/bin/weston-launch
+EOF
 
 package_success

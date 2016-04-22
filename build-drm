@@ -8,14 +8,18 @@ PACKAGE=drm
 
 cd_package
 
-run_autogen --host=${CROSS_COMPILE%"-"} --prefix=$PREFIX --with-sysroot=$SYSROOT \
+run_autogen \
 --enable-tegra-experimental-api \
 --disable-cairo-tests \
 --disable-intel \
 --disable-radeon \
---disable-vmwgfx
+--disable-vmwgfx \
+--disable-freedreno \
+--disable-valgrind \
+--disable-amdgpu \
+--enable-static
 
-make -j$NPROC
-make DESTDIR=$SYSROOT install
+run_make
+run_make install
 
 package_success

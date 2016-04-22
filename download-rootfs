@@ -4,53 +4,8 @@ set -e
 
 . scripts/env.sh
 
-f=Tegra_Linux_Sample-Root-Filesystem_R19.3.0_armhf.tbz2
 mkdir -p $TOP/out
-outfile=$TOP/out/$f
-root=$TOP/out/root
 
-if [ ! -f "$outfile" ]; then
-    status "Downloading rootfs..."
-    curl https://developer.nvidia.com/sites/default/files/akamai/mobile/files/L4T/$f -o $outfile
-fi
+. scripts/distro/download-$DISTRO
 
-if [ -d "$root" ]; then
-    read -p "$root will be overwritten. Continue (y/n)? " choice
-    case "$choice" in
-          y|Y ) ;;
-          n|N ) exit 1;;
-          * ) exit 1;;
-    esac
-    status "Removing existing rootfs..."
-    sudo rm -rf $root
-fi
-status "Extracting rootfs..."
-mkdir -p $root
-sudo tar xpf $outfile -C $root
-
-f=Tegra124_Linux_R19.3.0_armhf.tbz2
-outfile=$TOP/out/$f
-root=$TOP/out/Linux_for_Tegra
-
-if [ ! -f "$outfile" ]; then
-    status "Downloading binary drivers..."
-    curl https://developer.nvidia.com/sites/default/files/akamai/mobile/files/L4T/$f -o $outfile
-fi
-
-if [ -d "$root" ]; then
-    read -p "$root will be overwritten. Continue (y/n)? " choice
-    case "$choice" in
-          y|Y ) ;;
-          n|N ) exit 1;;
-          * ) exit 1;;
-    esac
-    status "Removing existing L4T package..."
-    sudo rm -rf $root
-fi
-status "Extracting binary drivers..."
-cd $TOP/out
-sudo tar xpf $outfile
-cd $root
-status "Installing binary drivers..."
-sudo ./apply_binaries.sh --root $TOP/out/root
-status "L4T rootfs successfully downloaded into $SYSROOT!"
+status "$DISTRO rootfs successfully downloaded into $SYSROOT!"
