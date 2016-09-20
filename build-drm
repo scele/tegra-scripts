@@ -9,7 +9,6 @@ PACKAGE=drm
 cd_package
 
 run_autogen \
---enable-tegra-experimental-api \
 --disable-cairo-tests \
 --disable-intel \
 --disable-radeon \
