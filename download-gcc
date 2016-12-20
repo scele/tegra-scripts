@@ -54,12 +54,12 @@ if [ ! -f "$TOP/out/host/$LINARO_GCC_PACKAGE/bin/pkg-config" ]; then
 fi
 
 # wayland-scanner
-if [ ! -f "$TOP/out/host/$LINARO_GCC_PACKAGE/bin/wayland-scanner" ]; then
-    mkdir -p $TOP/out/build/wayland-scanner
-    cd $TOP/out/build/wayland-scanner
-    $TOP/wayland/autogen.sh --disable-documentation
-    make wayland-scanner
-    cp wayland-scanner $TOP/out/host/$LINARO_GCC_PACKAGE/bin
-fi
+#if [ ! -f "$TOP/out/host/$LINARO_GCC_PACKAGE/bin/wayland-scanner" ]; then
+    #mkdir -p $TOP/out/build/wayland-scanner
+    #cd $TOP/out/build/wayland-scanner
+    #$TOP/wayland/autogen.sh --disable-documentation
+    #make wayland-scanner
+    #cp wayland-scanner $TOP/out/host/$LINARO_GCC_PACKAGE/bin
+#fi
 
 status "Cross-compilation toolchain successfully downloaded"
