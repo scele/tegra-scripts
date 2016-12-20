@@ -35,7 +35,7 @@ unset CFLAGS CXXFLAGS CROSS_COMPILE SYSROOT PKG_CONFIG_DIR PKG_CONFIG_LIBDIR PKG
 export PATH="$SYSTEM_PATH"
 
 # pkg-config
-PKG_CONFIG_VERSION=0.28
+PKG_CONFIG_VERSION=0.29.1
 outfile=$TOP/out/host/pkg-config-$PKG_CONFIG_VERSION.tar.gz
 url=http://pkgconfig.freedesktop.org/releases/pkg-config-$PKG_CONFIG_VERSION.tar.gz
 if [ ! -f "$outfile" ]; then
