@@ -10,7 +10,7 @@ cd_package
 
 run_autogen \
 --without-dri-drivers \
---with-gallium-drivers=nouveau \
+--with-gallium-drivers=nouveau,tegra \
 --enable-gbm \
 --enable-egl \
 --with-egl-platforms=drm,x11,wayland \
