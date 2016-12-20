@@ -8,15 +8,7 @@ mkdir -p $TOP/out/host
 
 f=$LINARO_GCC_PACKAGE.tar.xz
 outfile=$TOP/out/host/$f
-url="https://releases.linaro.org/${LINARO_GCC_RELEASE}/components/toolchain/binaries/${LINARO_GCC_VERSION}/${LINARO_GCC_VARIANT}/$f"
-case $ARCH in
-	arm)
-	;;
-	aarch64)
-	url="https://releases.linaro.org/${LINARO_GCC_RELEASE}/components/toolchain/binaries/${LINARO_GCC_VERSION}/${ARCH}-linux-gnu/$f"
-	;;
-esac
-
+url="https://releases.linaro.org/components/toolchain/binaries/6.2-2016.11/${LINARO_GCC_VARIANT}/$f"
 
 if [ ! -e "$TOP/out/host/$LINARO_GCC_PACKAGE" ]; then
     if [ ! -f "$outfile" ]; then
