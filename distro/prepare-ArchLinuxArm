@@ -59,6 +59,3 @@ for LINK in $LINKS; do
         ln -sfr $ABS $LINK
     fi
 done
-
-status "Updating X server path in /etc/X11..."
-find $SYSROOT/etc/X11 -type f -exec sed -i 's/\/usr\/bin\/X\b/\/opt\/nouveau\/bin\/X/g' {} +
