@@ -40,6 +40,9 @@ noto-fonts
 xterm
 mesa-demos
 libepoxy
+xf86-input-libinput
+xorg-server
+weston
 "
 
 status "Using qemu to install required packages on target FS..."
