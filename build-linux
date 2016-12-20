@@ -53,9 +53,6 @@ esac
 
 # Install modules
 run_make_kernel modules_install
-# Remove nouveau modules (we want to use the ones from the nouveau repository)
-KREL=$(run_make_kernel -s kernelrelease)
-rm -Rf $SYSROOT/lib/modules/$KREL/kernel/drivers/gpu/drm/nouveau
 
 # Generate boot script
 if [ ! "$1" = "-skip-uboot" ]; then
