@@ -21,7 +21,8 @@ run_autogen \
 --enable-shared-glapi \
 --enable-dri3 \
 --enable-glx \
---enable-glx-tls
+--enable-glx-tls \
+--enable-texture-float
 
 run_make
 run_make install
