@@ -10,6 +10,7 @@ cd_package
 
 run_autogen \
 --without-dri-drivers \
+--disable-gallium-llvm \
 --with-gallium-drivers=nouveau,tegra \
 --enable-gbm \
 --enable-egl \
